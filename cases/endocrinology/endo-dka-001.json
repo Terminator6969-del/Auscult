@@ -1,0 +1,236 @@
+{
+  "id": "endo-dka-001",
+  "arrivalBlurb": "Arrived by family car. Looks confused and breathing deeply.",
+  "chiefComplaint": "I feel very sick to my stomach and I cannot stop vomiting.",
+  "identity": {
+    "name": "Thandiwe Mokoena",
+    "age": 22,
+    "gender": "F",
+    "occupation": "University Student",
+    "livingSituation": "Living with parents",
+    "primaryLanguage": "English",
+    "healthLiteracy": "medium",
+    "personality": "anxious",
+    "personalTheory": "I think I ate something bad at the cafeteria."
+  },
+  "clinicalState": {
+    "primaryDiagnosis": "diabetic-ketoacidosis",
+    "severity": "critical",
+    "timeline": "Vomiting started yesterday. Polydipsia for 3 days.",
+    "baselineVitals": {
+      "hr": 125,
+      "bp": "95/55",
+      "spo2": 98,
+      "temp": 37.0,
+      "rr": 28
+    },
+    "medications": [
+      "Metformin",
+      "Humulin 30/70 (ran out)"
+    ],
+    "allergies": [
+      "Penicillin"
+    ]
+  },
+  "history": {
+    "surface": [
+      {
+        "id": "vomiting",
+        "question": "When did the vomiting start?",
+        "answer": "Yesterday morning. I can't keep water down.",
+        "relevant": true
+      },
+      {
+        "id": "pain",
+        "question": "Do you have stomach pain?",
+        "answer": "Yes, it aches all over.",
+        "relevant": true
+      }
+    ],
+    "middle": [
+      {
+        "id": "urine",
+        "question": "Are you urinating more than usual?",
+        "answer": "Yes, I had to go to the bathroom 5 times last night.",
+        "relevant": true
+      },
+      {
+        "id": "thirst",
+        "question": "Are you very thirsty?",
+        "answer": "My mouth is so dry, I'm incredibly thirsty.",
+        "relevant": true
+      }
+    ],
+    "deep": [
+      {
+        "id": "diabetes",
+        "question": "Do you have diabetes?",
+        "answer": "Yes, Type 1.",
+        "relevant": true
+      },
+      {
+        "id": "insulin",
+        "question": "Have you been taking your insulin?",
+        "answer": "The clinic ran out of stock last week. I've been trying to stretch what I had left.",
+        "relevant": true
+      }
+    ]
+  },
+  "physicalExam": {
+    "generalAppearance": "Lethargic young woman. Breathing is deep and rapid (Kussmaul). Fruity odor on breath.",
+    "abnormalFindings": [
+      "Abdomen: Diffuse tenderness, no guarding or rebound.",
+      "Skin: Decreased turgor, dry mucous membranes.",
+      "Neurological: GCS 14 (confused)."
+    ]
+  },
+  "testResults": [
+    {
+      "testId": "fingerprick-glucose",
+      "result": "Hi (> 33.3 mmol/L).",
+      "abnormal": true
+    },
+    {
+      "testId": "abg",
+      "result": "pH 7.15, pCO2 22, HCO3 8, pO2 95. Severe high anion gap metabolic acidosis.",
+      "abnormal": true
+    },
+    {
+      "testId": "urine-dipstick",
+      "result": "Glucose 4+, Ketones 4+.",
+      "abnormal": true
+    },
+    {
+      "testId": "bmp",
+      "result": "Na 132, K 5.2, Cl 98, Urea 12, Cr 110.",
+      "abnormal": true
+    }
+  ],
+  "correctDiagnosisId": "diabetic-ketoacidosis",
+  "diagnosisOptions": [
+    "diabetic-ketoacidosis",
+    "gastroenteritis",
+    "appendicitis",
+    "sepsis",
+    "hhs"
+  ],
+  "acceptableTreatmentIds": [
+    "iv-fluids-saline",
+    "iv-insulin-infusion",
+    "k-replacement",
+    "admit-icu"
+  ],
+  "criticalTreatmentIds": [
+    "iv-fluids-saline",
+    "iv-insulin-infusion"
+  ],
+  "education": {
+    "difficulty": 3,
+    "targetTrainingLevel": "Medical Student (Year 5)",
+    "learningObjectives": [
+      "Recognize DKA masquerading as acute abdomen",
+      "Prioritize fluid resuscitation before insulin",
+      "Understand public sector medication stockout realities"
+    ],
+    "commonErrors": [
+      "Diagnosing gastroenteritis and discharging",
+      "Starting insulin before IV fluids or potassium check"
+    ],
+    "facultyNotes": "Highlights the reality of stockouts in resource-limited settings leading to acute emergencies."
+  },
+  "rubric": {
+    "data_gathering": [
+      {
+        "criterion_id": "dg-dka-01",
+        "label": "Identified DKA rather than acute abdomen",
+        "weight": 3,
+        "framework": "SOCRATES",
+        "evidence": "Student considered the broader picture — vomiting + polyuria + polydipsia — rather than anchoring on gastroenteritis or appendicitis."
+      },
+      {
+        "criterion_id": "dg-dka-02",
+        "label": "Probed for diabetes history",
+        "weight": 3,
+        "evidence": "Student asked if the patient has diabetes, what type, and what medications they are on."
+      },
+      {
+        "criterion_id": "dg-dka-03",
+        "label": "Investigated medication access / adherence",
+        "weight": 3,
+        "evidence": "Student asked about insulin supply, whether they ran out, missed doses, or had trouble accessing the clinic pharmacy."
+      },
+      {
+        "criterion_id": "dg-dka-04",
+        "label": "Checked for precipitating factors",
+        "weight": 2,
+        "evidence": "Student asked about infection, trauma, missed meals, or other stressors that could have triggered DKA."
+      },
+      {
+        "criterion_id": "dg-dka-05",
+        "label": "Assessed volume status and severity",
+        "weight": 1,
+        "evidence": "Student noted signs of dehydration (tachycardia, hypotension, dry mucous membranes, confusion, Kussmaul breathing)."
+      }
+    ],
+    "clinical_management": [
+      {
+        "criterion_id": "cm-dka-01",
+        "label": "Prioritised fluid resuscitation before insulin",
+        "weight": 3,
+        "evidence": "Student ordered IV fluids (0.9% NaCl bolus) first — recognising that insulin cannot work effectively in a volume-depleted patient.",
+        "guideline_ref": "ada-dka-2024:ada-dka-fluids-first"
+      },
+      {
+        "criterion_id": "cm-dka-02",
+        "label": "Initiated appropriate insulin therapy",
+        "weight": 3,
+        "evidence": "Student ordered IV insulin infusion (not subcutaneous sliding scale) after confirming potassium >3.3 mEq/L.",
+        "guideline_ref": "ada-dka-2024:ada-dka-insulin-protocol"
+      },
+      {
+        "criterion_id": "cm-dka-03",
+        "label": "Checked and managed potassium",
+        "weight": 2,
+        "evidence": "Student checked potassium (BMP results) and addressed replacement — recognising that insulin drives K+ intracellularly and can cause dangerous hypokalemia.",
+        "guideline_ref": "ada-dka-2024:ada-dka-potassium-mgt"
+      },
+      {
+        "criterion_id": "cm-dka-04",
+        "label": "Arranged appropriate disposition",
+        "weight": 2,
+        "evidence": "Student arranged ICU/HDU admission or high-acuity monitoring — DKA requires close observation for cerebral edema, hypoglycemia, and potassium shifts."
+      },
+      {
+        "criterion_id": "cm-dka-05",
+        "label": "Addressed medication access for discharge planning",
+        "weight": 2,
+        "evidence": "Student discussed insulin supply, referral to a chronic-disease clinic, or a plan to prevent future stockout-related admissions."
+      }
+    ],
+    "interpersonal": [
+      {
+        "criterion_id": "ip-dka-01",
+        "label": "Reassured a confused and frightened young patient",
+        "weight": 2,
+        "framework": "NURSE",
+        "evidence": "Spoke calmly, acknowledged the patient's fear ('I think I ate something bad'), and explained what DKA is in plain terms."
+      },
+      {
+        "criterion_id": "ip-dka-02",
+        "label": "Explained the stockout reality without blame",
+        "weight": 1,
+        "evidence": "When the patient revealed running out of insulin, responded supportively — did not make the patient feel guilty for a systems failure."
+      }
+    ],
+    "safety_netting": {
+      "required_elements": [
+        "Explained what symptoms require urgent return (vomiting, confusion, rapid breathing)",
+        "Discussed insulin storage, adherence strategies, and what to do if the clinic runs out again",
+        "Arranged follow-up with a chronic-disease clinic or diabetes educator"
+      ],
+      "weight": 2,
+      "guideline_ref": "ada-dka-2024:ada-dka-transition-to-subcut"
+    },
+    "global_rating": "borderline-regression"
+  }
+}

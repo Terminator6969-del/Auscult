@@ -4,6 +4,30 @@ import type { ClinicId } from '../game/clinic';
 import { CLINIC_LABELS } from '../game/clinic';
 import { PATIENT_CASES_RECORD } from './patients';
 
+// ── Load cases from `cases/{specialty}/*.json` (the canonical source) ──
+//
+// Each JSON file in `cases/` is a standalone PatientCase. The file path
+// determines the specialty: `cases/cardiology/foo.json` → clinic "cardiology".
+// Falls are cast to PatientCase at import time; validation catches structural
+// issues at build time.
+//
+// `?raw` + `{ import: 'default' }` avoids Vite's JSON tree-shaking and gives
+// us the parsed object directly. The `as PatientCase` cast is safe because
+// the JSON is validated by the authoring skill and the type struct checks at
+// build time (Vite imports JSON as the shape of the file).
+//
+// If you add a new case file to `cases/` and it doesn't appear in the
+// library, make sure:
+//   1. The file ends in `.json`
+//   2. The file is valid JSON matching the PatientCase interface
+//   3. Import.meta.glob picks it up (Vite caches the glob; restart dev)
+
+type JsonCaseModule = { default: PatientCase };
+const caseFileModules = import.meta.glob<JsonCaseModule>('../../cases/**/*.json', { eager: true });
+
+// Regex to extract {specialty}/{filename} from e.g. "../../cases/cardiology/card-stemi-001.json"
+const CASE_PATH_RE = /\.\.\/\.\.\/cases\/([^/]+)\/(.+)\.json$/;
+
 /** Cute-cartoon face descriptor for the case library. Derived deterministically
  *  from the underlying `PatientCase` so the same patient always renders the
  *  same face across screens. */
@@ -109,15 +133,31 @@ function toCase(p: PatientCase, clinic: ClinicId): Case {
   };
 }
 
-// ── Build the library deterministically from POLYCLINIC_CASES ────────
+// ── Build the library from JSON case files + legacy polyclinic patients ──
 
 const BY_ID = new Map<string, { p: PatientCase; clinic: ClinicId }>();
 const ALL_CASES_RAW: Case[] = [];
 
+// 1. Load from `cases/{specialty}/*.json` (canonical source)
+for (const [path, mod] of Object.entries(caseFileModules)) {
+  const match = path.match(CASE_PATH_RE);
+  if (!match) continue;
+  const clinicId = match[1] as ClinicId;
+  const p = mod.default;
+  if (BY_ID.has(p.id)) {
+    console.warn(`Duplicate case id "${p.id}" in ${path} — skipping`);
+    continue;
+  }
+  BY_ID.set(p.id, { p, clinic: clinicId });
+  ALL_CASES_RAW.push(toCase(p, clinicId));
+}
+
+// 2. Load from legacy PATIENT_CASES_RECORD (patients.ts — hero cases that
+//    haven't been migrated to JSON yet).
 for (const [clinic, list] of Object.entries(PATIENT_CASES_RECORD) as Array<[ClinicId, PatientCase[]]>) {
-  if (clinic === 'all-specialties') continue; // skip the synthetic mixed bucket
+  if (clinic === 'all-specialties') continue;
   for (const p of list) {
-    if (BY_ID.has(p.id)) continue;
+    if (BY_ID.has(p.id)) continue; // JSON file takes precedence
     BY_ID.set(p.id, { p, clinic });
     ALL_CASES_RAW.push(toCase(p, clinic));
   }

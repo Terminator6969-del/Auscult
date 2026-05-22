@@ -1,0 +1,231 @@
+{
+  "id": "card-stemi-001",
+  "arrivalBlurb": "Walk-in. Sweating profusely, clutching chest.",
+  "chiefComplaint": "It feels like an elephant is sitting on my chest.",
+  "identity": {
+    "name": "Pieter van der Merwe",
+    "age": 58,
+    "gender": "M",
+    "occupation": "Mechanic",
+    "livingSituation": "Living with wife",
+    "primaryLanguage": "Afrikaans (speaks English)",
+    "healthLiteracy": "low",
+    "personality": "stoic",
+    "personalTheory": "Just bad heartburn, I had a heavy braai (BBQ) yesterday."
+  },
+  "clinicalState": {
+    "primaryDiagnosis": "stemi-anterior",
+    "severity": "critical",
+    "timeline": "Pain started 45 minutes ago while lifting a tire at work.",
+    "baselineVitals": {
+      "hr": 105,
+      "bp": "160/95",
+      "spo2": 94,
+      "temp": 36.8,
+      "rr": 22
+    },
+    "medications": [
+      "Enalapril",
+      "Simvastatin"
+    ],
+    "allergies": []
+  },
+  "history": {
+    "surface": [
+      {
+        "id": "onset",
+        "question": "When did it start?",
+        "answer": "About 45 minutes ago, sudden.",
+        "relevant": true
+      },
+      {
+        "id": "quality",
+        "question": "How does the pain feel?",
+        "answer": "Like a heavy crushing weight.",
+        "relevant": true
+      }
+    ],
+    "middle": [
+      {
+        "id": "radiation",
+        "question": "Does the pain travel?",
+        "answer": "Yes, down my left arm and into my jaw.",
+        "relevant": true
+      },
+      {
+        "id": "associated",
+        "question": "Do you feel nauseous or sweaty?",
+        "answer": "I'm drenched in sweat. I feel like vomiting.",
+        "relevant": true
+      }
+    ],
+    "deep": [
+      {
+        "id": "risk",
+        "question": "Do you smoke or have medical conditions?",
+        "answer": "I smoke a pack a day. I have high blood pressure and cholesterol.",
+        "relevant": true
+      },
+      {
+        "id": "prior",
+        "question": "Have you had this before?",
+        "answer": "Never like this. Usually just a little tightness when I work hard, but it goes away.",
+        "relevant": true
+      }
+    ]
+  },
+  "physicalExam": {
+    "generalAppearance": "Diaphoretic, pale, in obvious distress clutching his chest.",
+    "abnormalFindings": [
+      "Heart: Tachycardic, regular. S4 gallop present.",
+      "Lungs: Clear to auscultation bilaterally.",
+      "Skin: Cool and clammy."
+    ]
+  },
+  "testResults": [
+    {
+      "testId": "ecg",
+      "result": "ST-segment elevation in V1-V4 with reciprocal depression in II, III, aVF.",
+      "abnormal": true
+    },
+    {
+      "testId": "troponin",
+      "result": "hs-Trop T: 125 ng/L (elevated).",
+      "abnormal": true
+    },
+    {
+      "testId": "cxr",
+      "result": "No acute pulmonary edema, normal cardiac silhouette.",
+      "abnormal": false
+    }
+  ],
+  "correctDiagnosisId": "stemi",
+  "diagnosisOptions": [
+    "stemi",
+    "nstemi",
+    "gerd",
+    "pulmonary-embolism",
+    "aortic-dissection"
+  ],
+  "acceptableTreatmentIds": [
+    "aspirin",
+    "clopidogrel",
+    "heparin",
+    "morphine",
+    "pci-referral"
+  ],
+  "criticalTreatmentIds": [
+    "aspirin",
+    "pci-referral"
+  ],
+  "education": {
+    "difficulty": 2,
+    "targetTrainingLevel": "Medical Student (Year 4)",
+    "learningObjectives": [
+      "Immediate recognition of STEMI",
+      "Correct initial medical management (MONA/antiplatelets)"
+    ],
+    "commonErrors": [
+      "Dismissing as GERD due to patient theory",
+      "Delaying ECG"
+    ],
+    "facultyNotes": "Straightforward anterior STEMI. Goal is rapid ECG and antiplatelet administration."
+  },
+  "rubric": {
+    "data_gathering": [
+      {
+        "criterion_id": "dg-stemi-01",
+        "label": "Did not anchor on patient's heartburn theory",
+        "weight": 3,
+        "evidence": "Student did not dismiss the chest pain as GERD — despite the patient's own explanation ('heavy braai'), the student recognised the need to rule out ACS with an ECG."
+      },
+      {
+        "criterion_id": "dg-stemi-02",
+        "label": "Characterised chest pain fully",
+        "weight": 2,
+        "framework": "SOCRATES",
+        "evidence": "Student asked about onset, radiation, severity, associated symptoms (nausea, diaphoresis, dyspnea), and exacerbating/relieving factors."
+      },
+      {
+        "criterion_id": "dg-stemi-03",
+        "label": "Elicited cardiovascular risk factors",
+        "weight": 2,
+        "evidence": "Student asked about smoking, hypertension, high cholesterol, diabetes, or family history of premature heart disease."
+      },
+      {
+        "criterion_id": "dg-stemi-04",
+        "label": "Ordered ECG within minutes of arrival",
+        "weight": 3,
+        "evidence": "Student prioritised an ECG as the first investigation — recognising that a 12-lead ECG can be acquired and interpreted within 10 minutes.",
+        "guideline_ref": "esc-stemi-2023:esc-stemi-ecg-10min"
+      },
+      {
+        "criterion_id": "dg-stemi-05",
+        "label": "Checked for contraindications to antiplatelet therapy",
+        "weight": 1,
+        "evidence": "Student asked about bleeding history, peptic ulcer, recent surgery, or medications (warfarin/NOACs) before giving antiplatelets."
+      }
+    ],
+    "clinical_management": [
+      {
+        "criterion_id": "cm-stemi-01",
+        "label": "Administered aspirin immediately",
+        "weight": 3,
+        "evidence": "Student gave or ordered aspirin 300 mg (loading) — the single most important immediate intervention in suspected STEMI.",
+        "guideline_ref": "esc-stemi-2023:esc-stemi-antiplatelet-loading"
+      },
+      {
+        "criterion_id": "cm-stemi-02",
+        "label": "Started P2Y12 inhibitor",
+        "weight": 3,
+        "evidence": "Student ordered clopidogrel or ticagrelor loading — dual antiplatelet therapy is standard before PCI.",
+        "guideline_ref": "esc-stemi-2023:esc-stemi-antiplatelet-loading"
+      },
+      {
+        "criterion_id": "cm-stemi-03",
+        "label": "Activated cath lab or arranged PCI transfer",
+        "weight": 3,
+        "evidence": "Student arranged primary PCI within 120 minutes of diagnosis — the gold-standard reperfusion strategy.",
+        "guideline_ref": "esc-stemi-2023:esc-stemi-reperfusion-primary-pci"
+      },
+      {
+        "criterion_id": "cm-stemi-04",
+        "label": "Administered anticoagulation",
+        "weight": 2,
+        "evidence": "Student ordered heparin or enoxaparin as bridging anticoagulation before PCI.",
+        "guideline_ref": "esc-stemi-2023:esc-stemi-anticoagulation"
+      },
+      {
+        "criterion_id": "cm-stemi-05",
+        "label": "Provided adequate pain relief",
+        "weight": 1,
+        "evidence": "Student offered morphine for severe chest pain unrelieved by nitrates (or acknowledged the need for analgesia).",
+        "guideline_ref": "esc-stemi-2023:esc-stemi-pain-morphine"
+      }
+    ],
+    "interpersonal": [
+      {
+        "criterion_id": "ip-stemi-01",
+        "label": "Communicated urgency without frightening the patient",
+        "weight": 2,
+        "framework": "NURSE",
+        "evidence": "Explained that this is a serious but treatable condition, mobilised the team efficiently, and kept the patient informed without panic."
+      },
+      {
+        "criterion_id": "ip-stemi-02",
+        "label": "Respected patient's own explanation (heartburn)",
+        "weight": 1,
+        "evidence": "Did not belittle the patient's theory — gently redirected towards the cardiac workup without making the patient feel foolish."
+      }
+    ],
+    "safety_netting": {
+      "required_elements": [
+        "Explained the importance of calling EMS if chest pain recurs after discharge",
+        "Discussed cardiac rehabilitation and lifestyle changes (smoking cessation)",
+        "Arranged follow-up with cardiology"
+      ],
+      "weight": 2
+    },
+    "global_rating": "borderline-regression"
+  }
+}

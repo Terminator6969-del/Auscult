@@ -1,0 +1,227 @@
+{
+  "id": "id-tb-hiv-001",
+  "arrivalBlurb": "Walk-in. Extremely cachectic, coughing frequently.",
+  "chiefComplaint": "I have been coughing for a month and I'm losing weight.",
+  "identity": {
+    "name": "Sipho Ndlovu",
+    "age": 32,
+    "gender": "M",
+    "occupation": "Mineworker",
+    "livingSituation": "Living in a hostel with 6 other men",
+    "primaryLanguage": "isiZulu (speaks English well)",
+    "healthLiteracy": "low",
+    "personality": "stoic",
+    "personalTheory": "I think it is the dust from the mine."
+  },
+  "clinicalState": {
+    "primaryDiagnosis": "pulmonary-tuberculosis",
+    "severity": "urgent",
+    "timeline": "Cough started 6 weeks ago, night sweats 3 weeks ago.",
+    "baselineVitals": {
+      "hr": 110,
+      "bp": "100/60",
+      "spo2": 92,
+      "temp": 38.5,
+      "rr": 24
+    },
+    "medications": [],
+    "allergies": []
+  },
+  "history": {
+    "surface": [
+      {
+        "id": "cough",
+        "question": "Tell me about the cough",
+        "answer": "It is a wet cough, sometimes with yellow stuff.",
+        "relevant": true
+      },
+      {
+        "id": "weight",
+        "question": "Have you lost weight?",
+        "answer": "Yes, my clothes are very loose now.",
+        "relevant": true
+      }
+    ],
+    "middle": [
+      {
+        "id": "sweats",
+        "question": "Do you sweat at night?",
+        "answer": "Yes, I wake up and my bed is wet.",
+        "relevant": true
+      },
+      {
+        "id": "blood",
+        "question": "Is there blood in the cough?",
+        "answer": "Sometimes I see little streaks of blood.",
+        "relevant": true
+      }
+    ],
+    "deep": [
+      {
+        "id": "hiv",
+        "question": "Have you ever been tested for HIV?",
+        "answer": "Yes... 3 years ago it was positive, but I stopped taking the ARVs because I felt fine.",
+        "relevant": true
+      },
+      {
+        "id": "contacts",
+        "question": "Has anyone around you been coughing?",
+        "answer": "Yes, my roommate at the hostel was sent home because he was coughing blood.",
+        "relevant": true
+      }
+    ]
+  },
+  "physicalExam": {
+    "generalAppearance": "Cachectic young man, visibly tachypneic, occasional productive cough.",
+    "abnormalFindings": [
+      "Chest: Crepitations and bronchial breathing in the right upper lobe.",
+      "Lymph nodes: Generalized cervical lymphadenopathy.",
+      "General: Oral thrush present."
+    ]
+  },
+  "testResults": [
+    {
+      "testId": "cxr",
+      "result": "Right upper lobe cavitary lesion with surrounding consolidation.",
+      "abnormal": true
+    },
+    {
+      "testId": "gene-xpert",
+      "result": "MTB detected, Rifampicin resistance NOT detected.",
+      "abnormal": true
+    },
+    {
+      "testId": "hiv-rapid",
+      "result": "Positive.",
+      "abnormal": true
+    }
+  ],
+  "correctDiagnosisId": "pulmonary-tuberculosis",
+  "diagnosisOptions": [
+    "pulmonary-tuberculosis",
+    "pneumocystis-pneumonia",
+    "lung-cancer",
+    "community-acquired-pna",
+    "bronchiectasis"
+  ],
+  "acceptableTreatmentIds": [
+    "tb-rifafour",
+    "hiv-arv-restart",
+    "admit-isolation"
+  ],
+  "criticalTreatmentIds": [
+    "tb-rifafour"
+  ],
+  "education": {
+    "difficulty": 4,
+    "targetTrainingLevel": "Medical Student (Year 4+)",
+    "learningObjectives": [
+      "Recognize classic presentation of PTB",
+      "Identify need to screen for HIV in TB patients",
+      "Understand public health implications (isolation/contact tracing)"
+    ],
+    "commonErrors": [
+      "Missing the HIV history",
+      "Forgetting to isolate the patient"
+    ],
+    "facultyNotes": "Classic South African TB/HIV co-infection presentation. Emphasize probing for HIV status and adherence."
+  },
+  "rubric": {
+    "data_gathering": [
+      {
+        "criterion_id": "dg-tb-01",
+        "label": "Probed for red-flag TB symptoms",
+        "weight": 2,
+        "framework": "SOCRATES",
+        "evidence": "Student asked about hemoptysis, night sweats, or significant weight loss beyond the chief complaint."
+      },
+      {
+        "criterion_id": "dg-tb-02",
+        "label": "Screened for HIV status",
+        "weight": 3,
+        "evidence": "Student explicitly asked about HIV testing, status, or risk factors. TB is the index diagnosis \u2014 HIV screening is mandatory in SA.",
+        "guideline_ref": "who-tb-2023:who-tb-hiv-screen-all"
+      },
+      {
+        "criterion_id": "dg-tb-03",
+        "label": "Investigated treatment adherence",
+        "weight": 2,
+        "evidence": "Student asked about ARV adherence, whether patient is still taking medication, or when they last saw an HIV clinician."
+      },
+      {
+        "criterion_id": "dg-tb-04",
+        "label": "Explored TB contact exposure",
+        "weight": 2,
+        "evidence": "Student asked about household or workplace contacts with cough, known TB, or whether anyone else has been sick.",
+        "guideline_ref": "who-tb-2023:who-tb-contact-tracing"
+      },
+      {
+        "criterion_id": "dg-tb-05",
+        "label": "Assessed social / living situation",
+        "weight": 1,
+        "evidence": "Student asked about living conditions (hostel, crowded accommodation), occupational dust exposure, or ability to isolate."
+      }
+    ],
+    "clinical_management": [
+      {
+        "criterion_id": "cm-tb-01",
+        "label": "Initiated anti-TB therapy",
+        "weight": 3,
+        "evidence": "Student ordered or initiated first-line TB treatment (Rifafour / RHZE fixed-dose combination).",
+        "guideline_ref": "who-tb-2023:who-tb-rifafour-firstline"
+      },
+      {
+        "criterion_id": "cm-tb-02",
+        "label": "Addressed HIV co-management",
+        "weight": 3,
+        "evidence": "Student arranged ART initiation or restart, HIV clinic referral, or CD4 count \u2014 recognizing that TB/HIV co-infection requires integrated care.",
+        "guideline_ref": "who-tb-2023:who-tb-hiv-start-art"
+      },
+      {
+        "criterion_id": "cm-tb-03",
+        "label": "Arranged appropriate isolation",
+        "weight": 2,
+        "evidence": "Student considered airborne precautions: isolation admission, mask, or referral to a dedicated TB facility.",
+        "guideline_ref": "who-tb-2023:who-tb-infection-control"
+      },
+      {
+        "criterion_id": "cm-tb-04",
+        "label": "Ordered appropriate investigations",
+        "weight": 1,
+        "evidence": "Student ordered CXR, sputum GeneXpert (\u00b1 culture), and HIV test to confirm the diagnosis and assess resistance."
+      }
+    ],
+    "interpersonal": [
+      {
+        "criterion_id": "ip-tb-01",
+        "label": "Communicated with low-health-literacy patient",
+        "weight": 2,
+        "framework": "PLAB2",
+        "evidence": "Used plain language, avoided medical jargon, checked understanding, and was not dismissive of the patient's \"mine dust\" theory."
+      },
+      {
+        "criterion_id": "ip-tb-02",
+        "label": "Handled sensitive disclosure with empathy",
+        "weight": 2,
+        "framework": "NURSE",
+        "evidence": "When discussing HIV status and ART non-adherence, responded with empathy rather than judgment. Named the difficulty."
+      },
+      {
+        "criterion_id": "ip-tb-03",
+        "label": "Explained public health rationale without stigmatising",
+        "weight": 1,
+        "evidence": "Explained why isolation and contact tracing are needed in a way that did not blame or frighten the patient."
+      }
+    ],
+    "safety_netting": {
+      "required_elements": [
+        "Discussed default prevention \u2014 explained what happens if TB meds or ARVs are stopped",
+        "Advised return for worsening dyspnea, hemoptysis, or high fever",
+        "Explained contact tracing to the patient and offered to notify the hostel"
+      ],
+      "weight": 2,
+      "guideline_ref": "who-tb-2023:who-tb-contact-tracing"
+    },
+    "global_rating": "borderline-regression"
+  }
+}
