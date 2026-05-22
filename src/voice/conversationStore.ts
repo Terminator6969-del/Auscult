@@ -57,7 +57,7 @@ export function getOrCreatePatientConversation(
   // pediatric → parent's gender, adult → patient's gender.
   const speakerGender: 'M' | 'F' = isPediatric(patientCase)
     ? parentGenderFor(patientCase)
-    : patientCase.gender;
+    : patientCase.identity.gender;
   const conv = new Conversation(ctx, listeners, {
     systemPrompt: buildPersona(patientCase, setting),
     initialMessage: buildInitialLine(patientCase),

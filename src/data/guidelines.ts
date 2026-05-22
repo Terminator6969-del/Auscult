@@ -245,6 +245,147 @@ export const GUIDELINES: Guideline[] = [
       },
     ],
   },
+  // ────────────────────────────────────────────────────────────────
+  // South African pilot case guidelines
+  // ────────────────────────────────────────────────────────────────
+
+  // TB/HIV co-infection (Sipho Ndlovu)
+  {
+    id: 'who-tb-2023',
+    body: 'ATS',
+    year: 2023,
+    region: 'Global',
+    title: 'WHO consolidated guidelines on tuberculosis: Module 4 — treatment of drug-susceptible tuberculosis',
+    url: 'https://www.who.int/publications/i/item/9789240087419',
+    verificationStatus: 'auto-fetched',
+    lastVerified: '2026-04-25',
+    notes:
+      '2023 update. Key source for TB/HIV co-management, fixed-dose combination therapy, and infection control recommendations applicable to high-burden settings like South Africa.',
+    recommendations: [
+      {
+        recId: 'who-tb-hiv-start-art',
+        text: 'All people with TB and HIV should start antiretroviral therapy (ART) as soon as possible (within 2 weeks) after starting TB treatment, regardless of CD4 count.',
+        topic: 'TB/HIV co-infection',
+        system: 'infectious',
+      },
+      {
+        recId: 'who-tb-hiv-screen-all',
+        text: 'All people diagnosed with active TB should be offered HIV testing. All people living with HIV should be screened for active TB at every clinical encounter.',
+        topic: 'TB/HIV integrated screening',
+        system: 'infectious',
+      },
+      {
+        recId: 'who-tb-rifafour-firstline',
+        text: 'Adults with newly diagnosed pulmonary TB should receive a standard 6-month regimen comprising a 2-month intensive phase with rifampicin, isoniazid, pyrazinamide, and ethambutol (RHZE), followed by a 4-month continuation phase with rifampicin and isoniazid.',
+        topic: 'first-line TB therapy',
+        system: 'infectious',
+      },
+      {
+        recId: 'who-tb-infection-control',
+        text: 'People with infectious TB should be separated from others, wear surgical masks when outside isolation areas, and be educated about cough etiquette and respiratory hygiene.',
+        topic: 'infection control / isolation',
+        system: 'infectious',
+      },
+      {
+        recId: 'who-tb-contact-tracing',
+        text: 'Household contacts and other close contacts of people with pulmonary TB should be systematically investigated for active TB and, if eligible, offered TB preventive treatment.',
+        topic: 'contact tracing',
+        system: 'infectious',
+      },
+    ],
+  },
+
+  // DKA management (Thandiwe Mokoena)
+  {
+    id: 'ada-dka-2024',
+    body: 'ADA',
+    year: 2024,
+    region: 'US',
+    title: 'American Diabetes Association Standards of Care in Diabetes — 16. Diabetes Care in the Hospital',
+    url: 'https://diabetesjournals.org/care/article/47/Supplement_1/S295/153822/16-Diabetes-Care-in-the-Hospital',
+    verificationStatus: 'auto-fetched',
+    lastVerified: '2026-04-25',
+    notes:
+      'ADA Standards of Care 2024. Section 16 covers inpatient glycemic management, DKA/HHS diagnosis and treatment algorithms. JBS DS guidelines (UK) were also consulted for fluid/insulin titration rates.',
+    recommendations: [
+      {
+        recId: 'ada-dka-diagnosis',
+        text: 'DKA is diagnosed by the triad of hyperglycemia (BG ≥250 mg/dL), metabolic acidosis (pH <7.3, HCO3 <18 mEq/L), and ketonemia/ketonuria. HHS is diagnosed by BG ≥600 mg/dL without significant acidosis.',
+        topic: 'diagnostic criteria',
+        system: 'endocrine',
+      },
+      {
+        recId: 'ada-dka-fluids-first',
+        text: 'Begin fluid resuscitation with 0.9% NaCl (15–20 mL/kg over the first hour) before initiating insulin therapy, to restore intravascular volume and improve tissue perfusion.',
+        topic: 'fluid resuscitation priority',
+        system: 'endocrine',
+      },
+      {
+        recId: 'ada-dka-insulin-protocol',
+        text: 'Start intravenous regular insulin at 0.1 U/kg bolus followed by 0.1 U/kg/h continuous infusion. Reduce insulin rate once BG <250 mg/dL (13.9 mmol/L) and add dextrose-containing fluids to prevent hypoglycemia.',
+        topic: 'insulin therapy',
+        system: 'endocrine',
+      },
+      {
+        recId: 'ada-dka-potassium-mgt',
+        text: 'Monitor potassium closely. If K+ <5.2 mEq/L, add 20–30 mEq potassium to each liter of IV fluid to maintain K+ between 4.0–5.0 mEq/L. Do not start insulin if K+ <3.3 mEq/L — replete first.',
+        topic: 'potassium management',
+        system: 'endocrine',
+      },
+      {
+        recId: 'ada-dka-transition-to-subcut',
+        text: 'When DKA resolves (pH >7.3, HCO3 ≥18, BG <200 mg/dL), transition to subcutaneous insulin. Overlap SC and IV insulin by 1–2 hours for basal insulin to prevent rebound ketoacidosis.',
+        topic: 'transition to subcutaneous',
+        system: 'endocrine',
+      },
+    ],
+  },
+
+  // STEMI management (Pieter van der Merwe)
+  {
+    id: 'esc-stemi-2023',
+    body: 'ESC',
+    year: 2023,
+    region: 'EU',
+    title: '2023 ESC Guidelines for the management of acute coronary syndromes',
+    url: 'https://academic.oup.com/eurheartj/article/44/38/3720/7243211',
+    verificationStatus: 'auto-fetched',
+    lastVerified: '2026-04-25',
+    notes:
+      '2023 ESC update. Key recommendations for STEMI diagnosis, antiplatelet therapy, reperfusion strategies (primary PCI vs fibrin lysis), and peri-infarct care.',
+    recommendations: [
+      {
+        recId: 'esc-stemi-ecg-10min',
+        text: 'A 12-lead ECG should be acquired and interpreted within 10 minutes of first medical contact in any patient with suspected STEMI.',
+        topic: 'rapid ECG',
+        system: 'cardiovascular',
+      },
+      {
+        recId: 'esc-stemi-antiplatelet-loading',
+        text: 'Dual antiplatelet therapy consisting of aspirin (300 mg loading, 75–100 mg daily) plus a P2Y12 inhibitor (prasugrel 60 mg or ticagrelor 180 mg loading) should be given as early as possible before primary PCI.',
+        topic: 'antiplatelet therapy',
+        system: 'cardiovascular',
+      },
+      {
+        recId: 'esc-stemi-anticoagulation',
+        text: 'Anticoagulation with unfractionated heparin (70–100 U/kg bolus) or enoxaparin (0.5 mg/kg IV) should be given in patients undergoing primary PCI.',
+        topic: 'anticoagulation',
+        system: 'cardiovascular',
+      },
+      {
+        recId: 'esc-stemi-reperfusion-primary-pci',
+        text: 'Primary percutaneous coronary intervention (PCI) within 120 minutes of diagnosis is the preferred reperfusion strategy for patients with STEMI presenting within 12 hours of symptom onset.',
+        topic: 'reperfusion / PCI',
+        system: 'cardiovascular',
+      },
+      {
+        recId: 'esc-stemi-pain-morphine',
+        text: 'Morphine (2–4 mg IV, repeated as needed) is indicated for pain relief in STEMI patients who do not respond to nitrates, with careful monitoring for respiratory depression.',
+        topic: 'pain management',
+        system: 'cardiovascular',
+      },
+    ],
+  },
 ];
 
 export function getGuideline(id: string): Guideline | null {

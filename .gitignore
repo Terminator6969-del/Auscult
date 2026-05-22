@@ -18,6 +18,9 @@ backend/samples/*.wav
 
 tsconfig.tsbuildinfo
 
+# Credentials — never commit API keys
+chatLanguageModels.json
+
 # `skills` CLI (vercel-labs/skills) — installed locally, not committed
 /.agents/
 /skills/

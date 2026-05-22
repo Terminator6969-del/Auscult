@@ -1,206 +1,488 @@
 import type { PatientCase } from '../game/types';
+import type { ClinicId } from '../game/clinic';
 
-export const PATIENT_CASES: PatientCase[] = [
-  {
-    id: 'mi-001',
-    name: 'Ronald Smith',
-    age: 62,
-    gender: 'M',
-    severity: 'critical',
-    arrivalBlurb: 'Ambulance arrival. Diaphoretic, clutching chest.',
-    chiefComplaint: 'Crushing chest pain for 40 minutes, radiating to my left arm. I feel like I might die.',
-    vitals: { hr: 104, bp: '152/94', spo2: 95, temp: 36.9, rr: 22 },
-    anamnesis: [
-      { id: 'onset', question: 'When did it start?', answer: '40 minutes ago, suddenly, while watching TV.', relevant: true },
-      { id: 'radiation', question: 'Does the pain go anywhere?', answer: 'Yes — down my left arm and into my jaw.', relevant: true },
-      { id: 'quality', question: 'How would you describe the pain?', answer: 'Crushing. Like an elephant sitting on my chest.', relevant: true },
-      { id: 'sweating', question: 'Any sweating or nausea?', answer: 'Drenched in sweat. Feel sick to my stomach.', relevant: true },
-      { id: 'history', question: 'Any medical history?', answer: 'High blood pressure, high cholesterol. Father had a heart attack at 58.', relevant: true },
-      { id: 'travel', question: 'Any recent travel?', answer: 'No, I\'ve been home all week.', relevant: false },
-      { id: 'diet', question: 'What have you eaten today?', answer: 'Just coffee and toast this morning.', relevant: false },
-    ],
-    testResults: [
-      { testId: 'ecg', result: 'ST-elevation in leads II, III, aVF. Reciprocal depression in I and aVL.', abnormal: true },
-      { testId: 'troponin', result: 'Troponin I: 3.2 ng/mL (ref <0.04). Markedly elevated.', abnormal: true },
-      { testId: 'cxr', result: 'No acute cardiopulmonary findings. Heart size normal.', abnormal: false },
-      { testId: 'cbc', result: 'WBC 8.1, Hgb 14.2, Plt 240. Within normal limits.', abnormal: false },
-      { testId: 'dimer', result: 'D-Dimer 320 ng/mL (ref <500). Normal.', abnormal: false },
-    ],
-    correctDiagnosisId: 'stemi',
-    diagnosisOptions: ['stemi', 'unstable-angina', 'pe', 'aortic-dissection', 'gerd'],
-    acceptableTreatmentIds: ['aspirin', 'nitro', 'heparin', 'cath-lab', 'o2', 'admit-icu'],
-    criticalTreatmentIds: ['aspirin', 'cath-lab'],
-  },
-  {
-    id: 'appy-002',
-    name: 'Donna Johnson',
-    age: 19,
-    gender: 'F',
-    severity: 'urgent',
-    arrivalBlurb: 'Walk-in. Guarding abdomen, bent over.',
-    chiefComplaint: 'My stomach has been hurting since last night. It started near my belly button and now it\'s on the right side.',
-    vitals: { hr: 98, bp: '118/72', spo2: 99, temp: 38.2, rr: 18 },
-    anamnesis: [
-      { id: 'location', question: 'Where exactly is the pain now?', answer: 'Lower right side of my belly. It\'s really tender.', relevant: true },
-      { id: 'migration', question: 'Has the pain moved?', answer: 'Yes, started around my belly button, now it\'s on the right.', relevant: true },
-      { id: 'fever', question: 'Any fever or chills?', answer: 'I felt hot this morning. Didn\'t check.', relevant: true },
-      { id: 'nausea', question: 'Nausea or vomiting?', answer: 'Nauseous. I threw up once this morning.', relevant: true },
-      { id: 'appetite', question: 'How\'s your appetite?', answer: 'None. The thought of food makes me sick.', relevant: true },
-      { id: 'lmp', question: 'When was your last period?', answer: 'Two weeks ago. Normal.', relevant: true },
-      { id: 'cough', question: 'Any cough?', answer: 'No.', relevant: false },
-    ],
-    testResults: [
-      { testId: 'cbc', result: 'WBC 14.8 with left shift (neutrophils 82%). Elevated.', abnormal: true },
-      { testId: 'ct-abdomen', result: 'Dilated appendix (11mm) with periappendiceal fat stranding. Consistent with acute appendicitis.', abnormal: true },
-      { testId: 'urine', result: 'Trace leukocytes, negative nitrites, negative hCG.', abnormal: false },
-      { testId: 'bmp', result: 'Electrolytes, BUN, Cr all within normal limits.', abnormal: false },
-      { testId: 'us-abdomen', result: 'Non-compressible tubular structure in RLQ. Suggestive of appendicitis.', abnormal: true },
-    ],
-    correctDiagnosisId: 'appendicitis',
-    diagnosisOptions: ['appendicitis', 'gastroenteritis', 'ovarian-cyst', 'utis', 'ectopic'],
-    acceptableTreatmentIds: ['iv-fluids', 'abx-broad', 'analgesia', 'ondansetron', 'surgery-consult'],
-    criticalTreatmentIds: ['surgery-consult', 'abx-broad'],
-  },
-  {
-    id: 'asthma-003',
-    name: 'Timothy Williams',
-    age: 28,
-    gender: 'M',
-    severity: 'urgent',
-    arrivalBlurb: 'Walked in short of breath. Tripod position.',
-    chiefComplaint: 'I can\'t breathe. My chest is tight and I\'m wheezing. My inhaler isn\'t working.',
-    vitals: { hr: 118, bp: '138/82', spo2: 91, temp: 37.0, rr: 28 },
-    anamnesis: [
-      { id: 'history', question: 'Any history of asthma?', answer: 'Yes, since childhood. I use an albuterol inhaler.', relevant: true },
-      { id: 'trigger', question: 'What triggered this?', answer: 'I was cleaning out a dusty basement.', relevant: true },
-      { id: 'inhaler', question: 'How many puffs of your inhaler?', answer: 'About 10 in the last hour. Not helping.', relevant: true },
-      { id: 'fever', question: 'Any fever?', answer: 'No.', relevant: true },
-      { id: 'chest-pain', question: 'Any chest pain?', answer: 'Just tightness. Not sharp.', relevant: true },
-      { id: 'diet', question: 'What did you eat today?', answer: 'Sandwich for lunch.', relevant: false },
-    ],
-    testResults: [
-      { testId: 'peak-flow', result: 'Peak flow 180 L/min (personal best 480). 38% of baseline.', abnormal: true },
-      { testId: 'cxr', result: 'Hyperinflated lungs. No infiltrate or pneumothorax.', abnormal: true },
-      { testId: 'abg', result: 'pH 7.38, pCO2 38, pO2 72, HCO3 22. Mild hypoxia.', abnormal: true },
-      { testId: 'ecg', result: 'Sinus tachycardia. No acute changes.', abnormal: false },
-      { testId: 'cbc', result: 'Mild eosinophilia. Otherwise normal.', abnormal: false },
-    ],
-    correctDiagnosisId: 'asthma-exacerbation',
-    diagnosisOptions: ['asthma-exacerbation', 'pneumonia', 'pe', 'chf', 'anaphylaxis'],
-    acceptableTreatmentIds: ['neb-albuterol', 'steroids-iv', 'o2', 'observe'],
-    criticalTreatmentIds: ['neb-albuterol', 'steroids-iv'],
-  },
-  {
-    id: 'anaph-004',
-    name: 'Michelle Brown',
-    age: 34,
-    gender: 'F',
-    severity: 'critical',
-    arrivalBlurb: 'Rushed in by husband. Face swollen, hives on arms.',
-    chiefComplaint: 'My throat is closing up. I ate something at a restaurant and now I can\'t breathe right.',
-    vitals: { hr: 128, bp: '88/54', spo2: 93, temp: 36.8, rr: 26 },
-    anamnesis: [
-      { id: 'exposure', question: 'What did you eat?', answer: 'A Thai dish. I think it had peanuts. I\'m allergic.', relevant: true },
-      { id: 'onset', question: 'When did symptoms start?', answer: 'About 20 minutes after eating.', relevant: true },
-      { id: 'rash', question: 'Any rash?', answer: 'Hives all over my arms and chest.', relevant: true },
-      { id: 'swelling', question: 'Any swelling?', answer: 'My lips and tongue feel swollen.', relevant: true },
-      { id: 'epipen', question: 'Do you carry an EpiPen?', answer: 'I forgot it at home today.', relevant: true },
-      { id: 'past-reactions', question: 'Have you had reactions before?', answer: 'Yes, to peanuts. Never this bad.', relevant: true },
-    ],
-    testResults: [
-      { testId: 'ecg', result: 'Sinus tachycardia at 128. No ST changes.', abnormal: false },
-      { testId: 'cbc', result: 'WBC 11, Hgb normal. Mild leukocytosis.', abnormal: false },
-      { testId: 'cxr', result: 'Clear lung fields.', abnormal: false },
-    ],
-    correctDiagnosisId: 'anaphylaxis',
-    diagnosisOptions: ['anaphylaxis', 'asthma-exacerbation', 'angioedema-ace', 'panic-attack', 'vasovagal'],
-    acceptableTreatmentIds: ['epi-im', 'antihistamine', 'steroids-iv', 'iv-fluids', 'o2', 'observe'],
-    criticalTreatmentIds: ['epi-im'],
-  },
-  {
-    id: 'stroke-005',
-    name: 'Jason Jones',
-    age: 71,
-    gender: 'M',
-    severity: 'critical',
-    arrivalBlurb: 'EMS arrival. Sudden onset 45 min ago. Right-sided weakness, slurred speech.',
-    chiefComplaint: "Something... wrong. My arm. My face. Can't... talk right.",
-    vitals: { hr: 88, bp: '178/102', spo2: 97, temp: 36.7, rr: 16 },
-    anamnesis: [
-      { id: 'last-known-well', question: 'When did this start?', answer: "After lunch... two, maybe. I was having... tea. Then my arm... stopped.", relevant: true },
-      { id: 'weakness', question: 'Which side is weak?', answer: "Right side. Arm... and leg. Doesn't listen.", relevant: true },
-      { id: 'speech', question: 'Are you having trouble speaking?', answer: "I hear you... but the words... get stuck.", relevant: true },
-      { id: 'headache', question: 'Any headache?', answer: "No... no headache. Just... the weakness. Scared.", relevant: true },
-      { id: 'anticoag', question: 'Are you on any blood thinners?', answer: "No blood thinners. Just... blood pressure pills.", relevant: true },
-      { id: 'trauma', question: 'Any recent head injury?', answer: "No fall. It just... happened.", relevant: true },
-    ],
-    testResults: [
-      { testId: 'ct-head', result: 'No intracranial hemorrhage. Subtle loss of gray-white differentiation in left MCA territory.', abnormal: true },
-      { testId: 'glucose', result: 'Glucose 112 mg/dL. Normal.', abnormal: false },
-      { testId: 'ecg', result: 'Atrial fibrillation with rate 88.', abnormal: true },
-      { testId: 'cbc', result: 'Within normal limits.', abnormal: false },
-      { testId: 'bmp', result: 'Electrolytes normal. Cr 1.0.', abnormal: false },
-    ],
-    correctDiagnosisId: 'ischemic-stroke',
-    diagnosisOptions: ['ischemic-stroke', 'hemorrhagic-stroke', 'hypoglycemia', 'seizure-postictal', 'migraine'],
-    acceptableTreatmentIds: ['tpa', 'admit-icu', 'o2'],
-    criticalTreatmentIds: ['tpa'],
-  },
-  {
-    id: 'uti-006',
-    name: 'Carol Garcia',
-    age: 45,
-    gender: 'F',
-    severity: 'stable',
-    arrivalBlurb: 'Walked in. Uncomfortable but stable.',
-    chiefComplaint: 'It burns when I pee, and I\'ve been going every 20 minutes for two days.',
-    vitals: { hr: 84, bp: '122/76', spo2: 99, temp: 37.4, rr: 14 },
-    anamnesis: [
-      { id: 'dysuria', question: 'Does it burn when you urinate?', answer: 'Yes, terribly.', relevant: true },
-      { id: 'frequency', question: 'How often are you going?', answer: 'Every 20 minutes or so.', relevant: true },
-      { id: 'flank', question: 'Any back or flank pain?', answer: 'No, just lower belly pressure.', relevant: true },
-      { id: 'fever', question: 'Any fever or chills?', answer: 'I feel a little warm but no chills.', relevant: true },
-      { id: 'blood', question: 'Any blood in the urine?', answer: 'It looked pinkish this morning.', relevant: true },
-      { id: 'chest-pain', question: 'Any chest pain?', answer: 'No.', relevant: false },
-    ],
-    testResults: [
-      { testId: 'urine', result: 'Large leukocyte esterase, positive nitrites, many WBCs, few RBCs. Bacteria present.', abnormal: true },
-      { testId: 'cbc', result: 'WBC 10.2. Borderline.', abnormal: false },
-      { testId: 'bmp', result: 'Cr 0.9. Normal.', abnormal: false },
-    ],
-    correctDiagnosisId: 'uti',
-    diagnosisOptions: ['uti', 'pyelonephritis', 'kidney-stone', 'vaginitis', 'stis'],
-    acceptableTreatmentIds: ['abx-broad', 'analgesia', 'discharge'],
-    criticalTreatmentIds: ['abx-broad'],
-  },
-];
-
-export const DIAGNOSIS_LABELS: Record<string, string> = {
-  stemi: 'ST-elevation Myocardial Infarction (STEMI)',
-  'unstable-angina': 'Unstable Angina',
-  pe: 'Pulmonary Embolism',
-  'aortic-dissection': 'Aortic Dissection',
-  gerd: 'GERD / Non-cardiac chest pain',
-  appendicitis: 'Acute Appendicitis',
-  gastroenteritis: 'Viral Gastroenteritis',
-  'ovarian-cyst': 'Ovarian Cyst / Torsion',
-  utis: 'Urinary Tract Infection',
-  ectopic: 'Ectopic Pregnancy',
-  'asthma-exacerbation': 'Acute Asthma Exacerbation',
-  pneumonia: 'Community-acquired Pneumonia',
-  chf: 'Acute Heart Failure',
-  anaphylaxis: 'Anaphylaxis',
-  'angioedema-ace': 'ACE-inhibitor Angioedema',
-  'panic-attack': 'Panic Attack',
-  vasovagal: 'Vasovagal Syncope',
-  'ischemic-stroke': 'Acute Ischemic Stroke',
-  'hemorrhagic-stroke': 'Intracranial Hemorrhage',
-  hypoglycemia: 'Hypoglycemia',
-  'seizure-postictal': 'Postictal State',
-  migraine: 'Complicated Migraine',
-  uti: 'Uncomplicated UTI',
-  pyelonephritis: 'Pyelonephritis',
-  'kidney-stone': 'Nephrolithiasis',
-  vaginitis: 'Vaginitis',
-  stis: 'Sexually Transmitted Infection',
+export const PATIENT_CASES_RECORD: Partial<Record<ClinicId, PatientCase[]>> = {
+  'infectious-disease': [
+    {
+      id: 'id-tb-hiv-001',
+      arrivalBlurb: 'Walk-in. Extremely cachectic, coughing frequently.',
+      chiefComplaint: 'I have been coughing for a month and I\'m losing weight.',
+      identity: {
+        name: 'Sipho Ndlovu',
+        age: 32,
+        gender: 'M',
+        occupation: 'Mineworker',
+        livingSituation: 'Living in a hostel with 6 other men',
+        primaryLanguage: 'isiZulu (speaks English well)',
+        healthLiteracy: 'low',
+        personality: 'stoic',
+        personalTheory: 'I think it is the dust from the mine.'
+      },
+      clinicalState: {
+        primaryDiagnosis: 'pulmonary-tuberculosis',
+        severity: 'urgent',
+        timeline: 'Cough started 6 weeks ago, night sweats 3 weeks ago.',
+        baselineVitals: { hr: 110, bp: '100/60', spo2: 92, temp: 38.5, rr: 24 },
+        medications: [],
+        allergies: []
+      },
+      history: {
+        surface: [
+          { id: 'cough', question: 'Tell me about the cough', answer: 'It is a wet cough, sometimes with yellow stuff.', relevant: true },
+          { id: 'weight', question: 'Have you lost weight?', answer: 'Yes, my clothes are very loose now.', relevant: true }
+        ],
+        middle: [
+          { id: 'sweats', question: 'Do you sweat at night?', answer: 'Yes, I wake up and my bed is wet.', relevant: true },
+          { id: 'blood', question: 'Is there blood in the cough?', answer: 'Sometimes I see little streaks of blood.', relevant: true }
+        ],
+        deep: [
+          { id: 'hiv', question: 'Have you ever been tested for HIV?', answer: 'Yes... 3 years ago it was positive, but I stopped taking the ARVs because I felt fine.', relevant: true },
+          { id: 'contacts', question: 'Has anyone around you been coughing?', answer: 'Yes, my roommate at the hostel was sent home because he was coughing blood.', relevant: true }
+        ]
+      },
+      physicalExam: {
+        generalAppearance: 'Cachectic young man, visibly tachypneic, occasional productive cough.',
+        abnormalFindings: [
+          'Chest: Crepitations and bronchial breathing in the right upper lobe.',
+          'Lymph nodes: Generalized cervical lymphadenopathy.',
+          'General: Oral thrush present.'
+        ]
+      },
+      testResults: [
+        { testId: 'cxr', result: 'Right upper lobe cavitary lesion with surrounding consolidation.', abnormal: true },
+        { testId: 'gene-xpert', result: 'MTB detected, Rifampicin resistance NOT detected.', abnormal: true },
+        { testId: 'hiv-rapid', result: 'Positive.', abnormal: true }
+      ],
+      correctDiagnosisId: 'pulmonary-tuberculosis',
+      diagnosisOptions: ['pulmonary-tuberculosis', 'pneumocystis-pneumonia', 'lung-cancer', 'community-acquired-pna', 'bronchiectasis'],
+      acceptableTreatmentIds: ['tb-rifafour', 'hiv-arv-restart', 'admit-isolation'],
+      criticalTreatmentIds: ['tb-rifafour'],
+      education: {
+        difficulty: 4,
+        targetTrainingLevel: 'Medical Student (Year 4+)',
+        learningObjectives: ['Recognize classic presentation of PTB', 'Identify need to screen for HIV in TB patients', 'Understand public health implications (isolation/contact tracing)'],
+        commonErrors: ['Missing the HIV history', 'Forgetting to isolate the patient'],
+        facultyNotes: 'Classic South African TB/HIV co-infection presentation. Emphasize probing for HIV status and adherence.'
+      },
+      rubric: {
+        data_gathering: [
+          {
+            criterion_id: 'dg-tb-01',
+            label: 'Probed for red-flag TB symptoms',
+            weight: 2,
+            framework: 'SOCRATES',
+            evidence: 'Student asked about hemoptysis, night sweats, or significant weight loss beyond the chief complaint.',
+          },
+          {
+            criterion_id: 'dg-tb-02',
+            label: 'Screened for HIV status',
+            weight: 3,
+            evidence: 'Student explicitly asked about HIV testing, status, or risk factors. TB is the index diagnosis — HIV screening is mandatory in SA.',
+            guideline_ref: 'who-tb-2023:who-tb-hiv-screen-all',
+          },
+          {
+            criterion_id: 'dg-tb-03',
+            label: 'Investigated treatment adherence',
+            weight: 2,
+            evidence: 'Student asked about ARV adherence, whether patient is still taking medication, or when they last saw an HIV clinician.',
+          },
+          {
+            criterion_id: 'dg-tb-04',
+            label: 'Explored TB contact exposure',
+            weight: 2,
+            evidence: 'Student asked about household or workplace contacts with cough, known TB, or whether anyone else has been sick.',
+            guideline_ref: 'who-tb-2023:who-tb-contact-tracing',
+          },
+          {
+            criterion_id: 'dg-tb-05',
+            label: 'Assessed social / living situation',
+            weight: 1,
+            evidence: 'Student asked about living conditions (hostel, crowded accommodation), occupational dust exposure, or ability to isolate.',
+          },
+        ],
+        clinical_management: [
+          {
+            criterion_id: 'cm-tb-01',
+            label: 'Initiated anti-TB therapy',
+            weight: 3,
+            evidence: 'Student ordered or initiated first-line TB treatment (Rifafour / RHZE fixed-dose combination).',
+            guideline_ref: 'who-tb-2023:who-tb-rifafour-firstline',
+          },
+          {
+            criterion_id: 'cm-tb-02',
+            label: 'Addressed HIV co-management',
+            weight: 3,
+            evidence: 'Student arranged ART initiation or restart, HIV clinic referral, or CD4 count — recognizing that TB/HIV co-infection requires integrated care.',
+            guideline_ref: 'who-tb-2023:who-tb-hiv-start-art',
+          },
+          {
+            criterion_id: 'cm-tb-03',
+            label: 'Arranged appropriate isolation',
+            weight: 2,
+            evidence: 'Student considered airborne precautions: isolation admission, mask, or referral to a dedicated TB facility.',
+            guideline_ref: 'who-tb-2023:who-tb-infection-control',
+          },
+          {
+            criterion_id: 'cm-tb-04',
+            label: 'Ordered appropriate investigations',
+            weight: 1,
+            evidence: 'Student ordered CXR, sputum GeneXpert (± culture), and HIV test to confirm the diagnosis and assess resistance.',
+          },
+        ],
+        interpersonal: [
+          {
+            criterion_id: 'ip-tb-01',
+            label: 'Communicated with low-health-literacy patient',
+            weight: 2,
+            framework: 'PLAB2',
+            evidence: 'Used plain language, avoided medical jargon, checked understanding, and was not dismissive of the patient\'s "mine dust" theory.',
+          },
+          {
+            criterion_id: 'ip-tb-02',
+            label: 'Handled sensitive disclosure with empathy',
+            weight: 2,
+            framework: 'NURSE',
+            evidence: 'When discussing HIV status and ART non-adherence, responded with empathy rather than judgment. Named the difficulty.',
+          },
+          {
+            criterion_id: 'ip-tb-03',
+            label: 'Explained public health rationale without stigmatising',
+            weight: 1,
+            evidence: 'Explained why isolation and contact tracing are needed in a way that did not blame or frighten the patient.',
+          },
+        ],
+        safety_netting: {
+          required_elements: [
+            'Discussed default prevention — explained what happens if TB meds or ARVs are stopped',
+            'Advised return for worsening dyspnea, hemoptysis, or high fever',
+            'Explained contact tracing to the patient and offered to notify the hostel',
+          ],
+          weight: 2,
+          guideline_ref: 'who-tb-2023:who-tb-contact-tracing',
+        },
+        global_rating: 'borderline-regression',
+      },
+    }
+  ],
+  'endocrinology': [
+    {
+      id: 'endo-dka-001',
+      arrivalBlurb: 'Arrived by family car. Looks confused and breathing deeply.',
+      chiefComplaint: 'I feel very sick to my stomach and I cannot stop vomiting.',
+      identity: {
+        name: 'Thandiwe Mokoena',
+        age: 22,
+        gender: 'F',
+        occupation: 'University Student',
+        livingSituation: 'Living with parents',
+        primaryLanguage: 'English',
+        healthLiteracy: 'medium',
+        personality: 'anxious',
+        personalTheory: 'I think I ate something bad at the cafeteria.'
+      },
+      clinicalState: {
+        primaryDiagnosis: 'diabetic-ketoacidosis',
+        severity: 'critical',
+        timeline: 'Vomiting started yesterday. Polydipsia for 3 days.',
+        baselineVitals: { hr: 125, bp: '95/55', spo2: 98, temp: 37.0, rr: 28 },
+        medications: ['Metformin', 'Humulin 30/70 (ran out)'],
+        allergies: ['Penicillin']
+      },
+      history: {
+        surface: [
+          { id: 'vomiting', question: 'When did the vomiting start?', answer: 'Yesterday morning. I can\'t keep water down.', relevant: true },
+          { id: 'pain', question: 'Do you have stomach pain?', answer: 'Yes, it aches all over.', relevant: true }
+        ],
+        middle: [
+          { id: 'urine', question: 'Are you urinating more than usual?', answer: 'Yes, I had to go to the bathroom 5 times last night.', relevant: true },
+          { id: 'thirst', question: 'Are you very thirsty?', answer: 'My mouth is so dry, I\'m incredibly thirsty.', relevant: true }
+        ],
+        deep: [
+          { id: 'diabetes', question: 'Do you have diabetes?', answer: 'Yes, Type 1.', relevant: true },
+          { id: 'insulin', question: 'Have you been taking your insulin?', answer: 'The clinic ran out of stock last week. I\'ve been trying to stretch what I had left.', relevant: true }
+        ]
+      },
+      physicalExam: {
+        generalAppearance: 'Lethargic young woman. Breathing is deep and rapid (Kussmaul). Fruity odor on breath.',
+        abnormalFindings: [
+          'Abdomen: Diffuse tenderness, no guarding or rebound.',
+          'Skin: Decreased turgor, dry mucous membranes.',
+          'Neurological: GCS 14 (confused).'
+        ]
+      },
+      testResults: [
+        { testId: 'fingerprick-glucose', result: 'Hi (> 33.3 mmol/L).', abnormal: true },
+        { testId: 'abg', result: 'pH 7.15, pCO2 22, HCO3 8, pO2 95. Severe high anion gap metabolic acidosis.', abnormal: true },
+        { testId: 'urine-dipstick', result: 'Glucose 4+, Ketones 4+.', abnormal: true },
+        { testId: 'bmp', result: 'Na 132, K 5.2, Cl 98, Urea 12, Cr 110.', abnormal: true }
+      ],
+      correctDiagnosisId: 'diabetic-ketoacidosis',
+      diagnosisOptions: ['diabetic-ketoacidosis', 'gastroenteritis', 'appendicitis', 'sepsis', 'hhs'],
+      acceptableTreatmentIds: ['iv-fluids-saline', 'iv-insulin-infusion', 'k-replacement', 'admit-icu'],
+      criticalTreatmentIds: ['iv-fluids-saline', 'iv-insulin-infusion'],
+      education: {
+        difficulty: 3,
+        targetTrainingLevel: 'Medical Student (Year 5)',
+        learningObjectives: ['Recognize DKA masquerading as acute abdomen', 'Prioritize fluid resuscitation before insulin', 'Understand public sector medication stockout realities'],
+        commonErrors: ['Diagnosing gastroenteritis and discharging', 'Starting insulin before IV fluids or potassium check'],
+        facultyNotes: 'Highlights the reality of stockouts in resource-limited settings leading to acute emergencies.'
+      },
+      rubric: {
+        data_gathering: [
+          {
+            criterion_id: 'dg-dka-01',
+            label: 'Identified DKA rather than acute abdomen',
+            weight: 3,
+            framework: 'SOCRATES',
+            evidence: 'Student considered the broader picture — vomiting + polyuria + polydipsia — rather than anchoring on gastroenteritis or appendicitis.',
+          },
+          {
+            criterion_id: 'dg-dka-02',
+            label: 'Probed for diabetes history',
+            weight: 3,
+            evidence: 'Student asked if the patient has diabetes, what type, and what medications they are on.',
+          },
+          {
+            criterion_id: 'dg-dka-03',
+            label: 'Investigated medication access / adherence',
+            weight: 3,
+            evidence: 'Student asked about insulin supply, whether they ran out, missed doses, or had trouble accessing the clinic pharmacy.',
+          },
+          {
+            criterion_id: 'dg-dka-04',
+            label: 'Checked for precipitating factors',
+            weight: 2,
+            evidence: 'Student asked about infection, trauma, missed meals, or other stressors that could have triggered DKA.',
+          },
+          {
+            criterion_id: 'dg-dka-05',
+            label: 'Assessed volume status and severity',
+            weight: 1,
+            evidence: 'Student noted signs of dehydration (tachycardia, hypotension, dry mucous membranes, confusion, Kussmaul breathing).',
+          },
+        ],
+        clinical_management: [
+          {
+            criterion_id: 'cm-dka-01',
+            label: 'Prioritised fluid resuscitation before insulin',
+            weight: 3,
+            evidence: 'Student ordered IV fluids (0.9% NaCl bolus) first — recognising that insulin cannot work effectively in a volume-depleted patient.',
+            guideline_ref: 'ada-dka-2024:ada-dka-fluids-first',
+          },
+          {
+            criterion_id: 'cm-dka-02',
+            label: 'Initiated appropriate insulin therapy',
+            weight: 3,
+            evidence: 'Student ordered IV insulin infusion (not subcutaneous sliding scale) after confirming potassium >3.3 mEq/L.',
+            guideline_ref: 'ada-dka-2024:ada-dka-insulin-protocol',
+          },
+          {
+            criterion_id: 'cm-dka-03',
+            label: 'Checked and managed potassium',
+            weight: 2,
+            evidence: 'Student checked potassium (BMP results) and addressed replacement — recognising that insulin drives K+ intracellularly and can cause dangerous hypokalemia.',
+            guideline_ref: 'ada-dka-2024:ada-dka-potassium-mgt',
+          },
+          {
+            criterion_id: 'cm-dka-04',
+            label: 'Arranged appropriate disposition',
+            weight: 2,
+            evidence: 'Student arranged ICU/HDU admission or high-acuity monitoring — DKA requires close observation for cerebral edema, hypoglycemia, and potassium shifts.',
+          },
+          {
+            criterion_id: 'cm-dka-05',
+            label: 'Addressed medication access for discharge planning',
+            weight: 2,
+            evidence: 'Student discussed insulin supply, referral to a chronic-disease clinic, or a plan to prevent future stockout-related admissions.',
+          },
+        ],
+        interpersonal: [
+          {
+            criterion_id: 'ip-dka-01',
+            label: 'Reassured a confused and frightened young patient',
+            weight: 2,
+            framework: 'NURSE',
+            evidence: 'Spoke calmly, acknowledged the patient\'s fear (\'I think I ate something bad\'), and explained what DKA is in plain terms.',
+          },
+          {
+            criterion_id: 'ip-dka-02',
+            label: 'Explained the stockout reality without blame',
+            weight: 1,
+            evidence: 'When the patient revealed running out of insulin, responded supportively — did not make the patient feel guilty for a systems failure.',
+          },
+        ],
+        safety_netting: {
+          required_elements: [
+            'Explained what symptoms require urgent return (vomiting, confusion, rapid breathing)',
+            'Discussed insulin storage, adherence strategies, and what to do if the clinic runs out again',
+            'Arranged follow-up with a chronic-disease clinic or diabetes educator',
+          ],
+          weight: 2,
+          guideline_ref: 'ada-dka-2024:ada-dka-transition-to-subcut',
+        },
+        global_rating: 'borderline-regression',
+      },
+    }
+  ],
+  'cardiology': [
+    {
+      id: 'card-stemi-001',
+      arrivalBlurb: 'Walk-in. Sweating profusely, clutching chest.',
+      chiefComplaint: 'It feels like an elephant is sitting on my chest.',
+      identity: {
+        name: 'Pieter van der Merwe',
+        age: 58,
+        gender: 'M',
+        occupation: 'Mechanic',
+        livingSituation: 'Living with wife',
+        primaryLanguage: 'Afrikaans (speaks English)',
+        healthLiteracy: 'low',
+        personality: 'stoic',
+        personalTheory: 'Just bad heartburn, I had a heavy braai (BBQ) yesterday.'
+      },
+      clinicalState: {
+        primaryDiagnosis: 'stemi-anterior',
+        severity: 'critical',
+        timeline: 'Pain started 45 minutes ago while lifting a tire at work.',
+        baselineVitals: { hr: 105, bp: '160/95', spo2: 94, temp: 36.8, rr: 22 },
+        medications: ['Enalapril', 'Simvastatin'],
+        allergies: []
+      },
+      history: {
+        surface: [
+          { id: 'onset', question: 'When did it start?', answer: 'About 45 minutes ago, sudden.', relevant: true },
+          { id: 'quality', question: 'How does the pain feel?', answer: 'Like a heavy crushing weight.', relevant: true }
+        ],
+        middle: [
+          { id: 'radiation', question: 'Does the pain travel?', answer: 'Yes, down my left arm and into my jaw.', relevant: true },
+          { id: 'associated', question: 'Do you feel nauseous or sweaty?', answer: 'I\'m drenched in sweat. I feel like vomiting.', relevant: true }
+        ],
+        deep: [
+          { id: 'risk', question: 'Do you smoke or have medical conditions?', answer: 'I smoke a pack a day. I have high blood pressure and cholesterol.', relevant: true },
+          { id: 'prior', question: 'Have you had this before?', answer: 'Never like this. Usually just a little tightness when I work hard, but it goes away.', relevant: true }
+        ]
+      },
+      physicalExam: {
+        generalAppearance: 'Diaphoretic, pale, in obvious distress clutching his chest.',
+        abnormalFindings: [
+          'Heart: Tachycardic, regular. S4 gallop present.',
+          'Lungs: Clear to auscultation bilaterally.',
+          'Skin: Cool and clammy.'
+        ]
+      },
+      testResults: [
+        { testId: 'ecg', result: 'ST-segment elevation in V1-V4 with reciprocal depression in II, III, aVF.', abnormal: true },
+        { testId: 'troponin', result: 'hs-Trop T: 125 ng/L (elevated).', abnormal: true },
+        { testId: 'cxr', result: 'No acute pulmonary edema, normal cardiac silhouette.', abnormal: false }
+      ],
+      correctDiagnosisId: 'stemi',
+      diagnosisOptions: ['stemi', 'nstemi', 'gerd', 'pulmonary-embolism', 'aortic-dissection'],
+      acceptableTreatmentIds: ['aspirin', 'clopidogrel', 'heparin', 'morphine', 'pci-referral'],
+      criticalTreatmentIds: ['aspirin', 'pci-referral'],
+      education: {
+        difficulty: 2,
+        targetTrainingLevel: 'Medical Student (Year 4)',
+        learningObjectives: ['Immediate recognition of STEMI', 'Correct initial medical management (MONA/antiplatelets)'],
+        commonErrors: ['Dismissing as GERD due to patient theory', 'Delaying ECG'],
+        facultyNotes: 'Straightforward anterior STEMI. Goal is rapid ECG and antiplatelet administration.'
+      },
+      rubric: {
+        data_gathering: [
+          {
+            criterion_id: 'dg-stemi-01',
+            label: 'Did not anchor on patient\'s heartburn theory',
+            weight: 3,
+            evidence: 'Student did not dismiss the chest pain as GERD — despite the patient\'s own explanation (\'heavy braai\'), the student recognised the need to rule out ACS with an ECG.',
+          },
+          {
+            criterion_id: 'dg-stemi-02',
+            label: 'Characterised chest pain fully',
+            weight: 2,
+            framework: 'SOCRATES',
+            evidence: 'Student asked about onset, radiation, severity, associated symptoms (nausea, diaphoresis, dyspnea), and exacerbating/relieving factors.',
+          },
+          {
+            criterion_id: 'dg-stemi-03',
+            label: 'Elicited cardiovascular risk factors',
+            weight: 2,
+            evidence: 'Student asked about smoking, hypertension, high cholesterol, diabetes, or family history of premature heart disease.',
+          },
+          {
+            criterion_id: 'dg-stemi-04',
+            label: 'Ordered ECG within minutes of arrival',
+            weight: 3,
+            evidence: 'Student prioritised an ECG as the first investigation — recognising that a 12-lead ECG can be acquired and interpreted within 10 minutes.',
+            guideline_ref: 'esc-stemi-2023:esc-stemi-ecg-10min',
+          },
+          {
+            criterion_id: 'dg-stemi-05',
+            label: 'Checked for contraindications to antiplatelet therapy',
+            weight: 1,
+            evidence: 'Student asked about bleeding history, peptic ulcer, recent surgery, or medications (warfarin/NOACs) before giving antiplatelets.',
+          },
+        ],
+        clinical_management: [
+          {
+            criterion_id: 'cm-stemi-01',
+            label: 'Administered aspirin immediately',
+            weight: 3,
+            evidence: 'Student gave or ordered aspirin 300 mg (loading) — the single most important immediate intervention in suspected STEMI.',
+            guideline_ref: 'esc-stemi-2023:esc-stemi-antiplatelet-loading',
+          },
+          {
+            criterion_id: 'cm-stemi-02',
+            label: 'Started P2Y12 inhibitor',
+            weight: 3,
+            evidence: 'Student ordered clopidogrel or ticagrelor loading — dual antiplatelet therapy is standard before PCI.',
+            guideline_ref: 'esc-stemi-2023:esc-stemi-antiplatelet-loading',
+          },
+          {
+            criterion_id: 'cm-stemi-03',
+            label: 'Activated cath lab or arranged PCI transfer',
+            weight: 3,
+            evidence: 'Student arranged primary PCI within 120 minutes of diagnosis — the gold-standard reperfusion strategy.',
+            guideline_ref: 'esc-stemi-2023:esc-stemi-reperfusion-primary-pci',
+          },
+          {
+            criterion_id: 'cm-stemi-04',
+            label: 'Administered anticoagulation',
+            weight: 2,
+            evidence: 'Student ordered heparin or enoxaparin as bridging anticoagulation before PCI.',
+            guideline_ref: 'esc-stemi-2023:esc-stemi-anticoagulation',
+          },
+          {
+            criterion_id: 'cm-stemi-05',
+            label: 'Provided adequate pain relief',
+            weight: 1,
+            evidence: 'Student offered morphine for severe chest pain unrelieved by nitrates (or acknowledged the need for analgesia).',
+            guideline_ref: 'esc-stemi-2023:esc-stemi-pain-morphine',
+          },
+        ],
+        interpersonal: [
+          {
+            criterion_id: 'ip-stemi-01',
+            label: 'Communicated urgency without frightening the patient',
+            weight: 2,
+            framework: 'NURSE',
+            evidence: 'Explained that this is a serious but treatable condition, mobilised the team efficiently, and kept the patient informed without panic.',
+          },
+          {
+            criterion_id: 'ip-stemi-02',
+            label: 'Respected patient\'s own explanation (heartburn)',
+            weight: 1,
+            evidence: 'Did not belittle the patient\'s theory — gently redirected towards the cardiac workup without making the patient feel foolish.',
+          },
+        ],
+        safety_netting: {
+          required_elements: [
+            'Explained the importance of calling EMS if chest pain recurs after discharge',
+            'Discussed cardiac rehabilitation and lifestyle changes (smoking cessation)',
+            'Arranged follow-up with cardiology',
+          ],
+          weight: 2,
+        },
+        global_rating: 'borderline-regression',
+      },
+    }
+  ]
 };

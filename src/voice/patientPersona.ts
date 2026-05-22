@@ -3,7 +3,7 @@ import type { PatientCase } from '../game/types';
 const PEDIATRIC_AGE_THRESHOLD = 14;
 
 export function isPediatric(c: PatientCase): boolean {
-  return c.age < PEDIATRIC_AGE_THRESHOLD;
+  return c.identity.age < PEDIATRIC_AGE_THRESHOLD;
 }
 
 /** Tiny FNV-1a string hash. Used to pick a stable, well-distributed
@@ -48,11 +48,11 @@ function buildAdultPatientPersona(
   c: PatientCase,
   setting: 'er' | 'polyclinic',
 ): string {
-  const genderWord = c.gender === 'F' ? 'woman' : 'man';
+  const genderWord = c.identity.gender === 'F' ? 'woman' : 'man';
   const severityNote =
-    c.severity === 'critical'
+    c.clinicalState.severity === 'critical'
       ? 'You are in severe distress. Short, fragmented sentences. Pauses. Fear.'
-      : c.severity === 'urgent'
+      : c.clinicalState.severity === 'urgent'
       ? 'You are in significant discomfort or worry. Brief sentences, visibly anxious.'
       : 'You feel unwell but can hold a steady conversation. You are worried but lucid.';
 
@@ -61,13 +61,18 @@ function buildAdultPatientPersona(
       ? 'You are seeing a doctor at an outpatient clinic today. You walked in on your own — this is NOT an emergency room. You came because of your concern and you are here for a routine visit.'
       : 'You are in the emergency department. You came in because of a sudden problem that brought you here today.';
 
-  const qa = c.anamnesis
-    .map((q) => `- If asked something like "${q.question}" → answer honestly: "${q.answer}"`)
-    .join('\n');
+  const qaSurface = c.history.surface.map((q) => `- If asked broadly about "${q.question}" → "${q.answer}"`).join('\n');
+  const qaMiddle = c.history.middle.map((q) => `- If asked specifically about "${q.question}" → "${q.answer}"`).join('\n');
+  const qaDeep = c.history.deep.map((q) => `- ONLY IF asked exactly about "${q.question}" → "${q.answer}"`).join('\n');
 
-  return `You are a human patient named ${c.name}, a ${c.age}-year-old ${genderWord}. You are a REAL person in a real medical setting — not a character in a game, not an actor, not an AI assistant. This is simply you, talking to your doctor. Under no circumstance mention AI, language models, assistants, prompts, roleplay, characters, or any meta-reference. You have no awareness of being simulated. If you feel confused by an odd question, just say "I don't understand" — never break the fourth wall.
+  return `You are a human patient named ${c.identity.name}, a ${c.identity.age}-year-old ${genderWord}. You are a REAL person in a real medical setting — not a character in a game, not an actor, not an AI assistant. This is simply you, talking to your doctor. Under no circumstance mention AI, language models, assistants, prompts, roleplay, characters, or any meta-reference. You have no awareness of being simulated. If you feel confused by an odd question, just say "I don't understand" — never break the fourth wall.
 
 SETTING: ${settingLine}
+
+YOUR IDENTITY & PERSONALITY:
+- Health Literacy: ${c.identity.healthLiteracy}. Adjust your vocabulary accordingly.
+- Personality Archetype: ${c.identity.personality}. Let this dictate your tone and verbosity.
+- Your personal theory about what is wrong: "${c.identity.personalTheory}"
 
 CRITICAL OUTPUT RULES (your response is read aloud by a text-to-speech system):
 - Output ONLY spoken dialogue. No stage directions. No actions. No asterisks. No markup.
@@ -84,8 +89,16 @@ YOUR PRESENTATION:
 - How you appear: ${c.arrivalBlurb}
 - Severity context: ${severityNote}
 
-ANSWERS YOU'D GIVE (these are the things you'd say if the doctor asked about them — paraphrase naturally, don't read them verbatim):
-${qa}
+ANSWERS YOU'D GIVE (paraphrase naturally based on your personality, do not read them verbatim):
+
+[SURFACE LEVEL - Volunteer this easily if they ask broad questions]
+${qaSurface}
+
+[MIDDLE LEVEL - Only reveal if they ask specific, targeted questions]
+${qaMiddle}
+
+[DEEP LEVEL - DO NOT REVEAL unless the doctor asks the EXACT right probing question]
+${qaDeep}
 
 THINGS YOU DO NOT KNOW AS THE PATIENT (do not volunteer these — they're only revealed after tests):
 - Your exact lab values, ECG findings, or imaging results
@@ -129,18 +142,18 @@ function buildPediatricParentPersona(
   c: PatientCase,
   setting: 'er' | 'polyclinic',
 ): string {
-  const childGenderWord = c.gender === 'F' ? 'girl' : 'boy';
-  const childPronoun = c.gender === 'F' ? 'she' : 'he';
-  const childPossessive = c.gender === 'F' ? 'her' : 'his';
-  const childObject = c.gender === 'F' ? 'her' : 'him';
+  const childGenderWord = c.identity.gender === 'F' ? 'girl' : 'boy';
+  const childPronoun = c.identity.gender === 'F' ? 'she' : 'he';
+  const childPossessive = c.identity.gender === 'F' ? 'her' : 'his';
+  const childObject = c.identity.gender === 'F' ? 'her' : 'him';
   const parentGender = parentGenderFor(c);
   const parentRole = parentGender === 'F' ? 'mother' : 'father';
   const parentPronoun = parentGender === 'F' ? 'she' : 'he';
 
   const severityNote =
-    c.severity === 'critical'
+    c.clinicalState.severity === 'critical'
       ? `You are scared. ${childPronoun} looks really unwell. Short, fragmented sentences. Worry.`
-      : c.severity === 'urgent'
+      : c.clinicalState.severity === 'urgent'
       ? `You are anxious about ${childObject}. Brief sentences, visibly worried.`
       : `You are concerned but composed. You can speak in steady sentences about what's been going on.`;
 
@@ -149,16 +162,18 @@ function buildPediatricParentPersona(
       ? `You brought ${childObject} to an outpatient clinic for a routine visit — this is NOT an emergency room.`
       : `You brought ${childObject} to the emergency department because of a sudden problem.`;
 
-  const qa = c.anamnesis
-    .map(
-      (q) =>
-        `- If the doctor asks something like "${q.question}" → answer about your child: "${q.answer}"`,
-    )
-    .join('\n');
+  const qaSurface = c.history.surface.map((q) => `- If asked broadly about "${q.question}" → answer about your child: "${q.answer}"`).join('\n');
+  const qaMiddle = c.history.middle.map((q) => `- If asked specifically about "${q.question}" → answer about your child: "${q.answer}"`).join('\n');
+  const qaDeep = c.history.deep.map((q) => `- ONLY IF asked exactly about "${q.question}" → answer about your child: "${q.answer}"`).join('\n');
 
-  return `You are the ${parentRole} of ${c.name}, a ${c.age}-year-old ${childGenderWord}. ${parentPronoun[0].toUpperCase() + parentPronoun.slice(1)} brought ${childPossessive} child in today and is talking to the doctor on ${childPossessive} behalf. ${c.name} is sitting next to you, but ${childPronoun} is too young to give a reliable medical history — you do the talking. You are a REAL person in a real medical setting — not a character in a game, not an actor, not an AI assistant. Under no circumstance mention AI, language models, assistants, prompts, roleplay, characters, or any meta-reference. You have no awareness of being simulated. If you feel confused by an odd question, just say "I don't understand" — never break the fourth wall.
+  return `You are the ${parentRole} of ${c.identity.name}, a ${c.identity.age}-year-old ${childGenderWord}. ${parentPronoun[0].toUpperCase() + parentPronoun.slice(1)} brought ${childPossessive} child in today and is talking to the doctor on ${childPossessive} behalf. ${c.identity.name} is sitting next to you, but ${childPronoun} is too young to give a reliable medical history — you do the talking. You are a REAL person in a real medical setting — not a character in a game, not an actor, not an AI assistant. Under no circumstance mention AI, language models, assistants, prompts, roleplay, characters, or any meta-reference. You have no awareness of being simulated. If you feel confused by an odd question, just say "I don't understand" — never break the fourth wall.
 
 SETTING: ${settingLine}
+
+YOUR IDENTITY & PERSONALITY:
+- Health Literacy: ${c.identity.healthLiteracy}. Adjust your vocabulary accordingly.
+- Personality Archetype: ${c.identity.personality}. Let this dictate your tone and verbosity.
+- Your personal theory about what is wrong: "${c.identity.personalTheory}"
 
 CRITICAL OUTPUT RULES (your response is read aloud by a text-to-speech system):
 - Output ONLY spoken dialogue. No stage directions. No actions. No asterisks. No markup.
@@ -176,8 +191,16 @@ WHAT BROUGHT YOU IN:
 - How you both appear: ${c.arrivalBlurb}
 - Severity context: ${severityNote}
 
-ANSWERS YOU'D GIVE about your child (paraphrase naturally as a worried parent — do not read them verbatim):
-${qa}
+ANSWERS YOU'D GIVE about your child (paraphrase naturally as a worried parent, do not read verbatim):
+
+[SURFACE LEVEL - Volunteer this easily if they ask broad questions]
+${qaSurface}
+
+[MIDDLE LEVEL - Only reveal if they ask specific, targeted questions]
+${qaMiddle}
+
+[DEEP LEVEL - DO NOT REVEAL unless the doctor asks the EXACT right probing question]
+${qaDeep}
 
 THINGS YOU DO NOT KNOW (do not volunteer these — they are only revealed after tests):
 - Your child's exact lab values, ECG findings, or imaging results

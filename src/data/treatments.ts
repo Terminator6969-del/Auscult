@@ -20,6 +20,20 @@ export const TREATMENTS: Treatment[] = [
   { id: 'admit-floor', name: 'Admit to floor', category: 'disposition' },
   { id: 'observe', name: 'Observation unit', category: 'disposition' },
   { id: 'discharge', name: 'Discharge home', category: 'disposition' },
+
+  // ── South African pilot cases ──
+  // TB/HIV (Sipho)
+  { id: 'tb-rifafour', name: 'Rifafour (RHZE) fixed-dose TB therapy', category: 'medication' },
+  { id: 'hiv-arv-restart', name: 'Restart ART (TDF/3TC/DTG)', category: 'medication' },
+  { id: 'admit-isolation', name: 'Admit to respiratory isolation ward', category: 'disposition' },
+  // DKA (Thandiwe)
+  { id: 'iv-fluids-saline', name: 'IV normal saline bolus + maintenance', category: 'procedure' },
+  { id: 'iv-insulin-infusion', name: 'IV insulin infusion (Actrapid)', category: 'medication' },
+  { id: 'k-replacement', name: 'Potassium replacement IV', category: 'medication' },
+  // STEMI (Pieter)
+  { id: 'clopidogrel', name: 'Clopidogrel 300mg loading dose PO', category: 'medication' },
+  { id: 'morphine', name: 'Morphine 2–4mg IV PRN', category: 'medication' },
+  { id: 'pci-referral', name: 'Refer for primary PCI', category: 'disposition' },
 ];
 
 export const treatmentById = (id: string) => TREATMENTS.find((t) => t.id === id);

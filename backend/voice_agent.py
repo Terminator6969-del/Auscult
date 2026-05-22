@@ -3,7 +3,7 @@
 Runs as a separate process from the FastAPI server. Joins every LiveKit
 room created by the frontend and roleplays the patient over WebRTC:
 
-    Browser mic → Deepgram Nova-3 STT → Claude Haiku 4.5 → Cartesia Sonic-2 TTS → Browser
+    Browser mic → Deepgram Nova-3 STT → OpenRouter LLM → Cartesia Sonic-2 TTS → Browser
 
 The persona prompt and voice ID come from room metadata (set by the
 backend `/voice/token` endpoint when the room is created), so this
@@ -24,7 +24,7 @@ from pathlib import Path
 from dotenv import load_dotenv
 from livekit import agents, rtc
 from livekit.agents import Agent, AgentSession, RoomInputOptions, WorkerOptions, cli
-from livekit.plugins import anthropic, cartesia, deepgram, silero
+from livekit.plugins import openai, cartesia, deepgram, silero
 
 # Load .env.local first (project convention), .env as fallback.
 _BACKEND = Path(__file__).resolve().parent
@@ -35,6 +35,41 @@ logger = logging.getLogger("medkit.voice-agent")
 logger.setLevel(logging.INFO)
 
 
+# OpenRouter — free LLM for the patient persona.
+# Set OPENROUTER_API_KEY in .env.local (sign up at https://openrouter.ai/keys).
+# If unset, falls back to the livekit.plugins.openai default (OpenAI API key).
+_OR_KEY = os.environ.get("OPENROUTER_API_KEY", "")
+_OR_VOICE_MODEL = os.environ.get("OPENROUTER_VOICE_MODEL", "meta-llama/llama-3.1-8b-instruct")
+_OR_BASE_URL = "https://openrouter.ai/api/v1"
+
+
+def _build_voice_llm():
+    """Build an LLM for the voice agent. When OPENROUTER_API_KEY is set,
+    uses the OpenAI-compatible plugin pointed at OpenRouter; otherwise
+    falls back to the Anthropic plugin (Claude Haiku)."""
+    if _OR_KEY:
+        try:
+            import openai as _openai_mod  # type: ignore
+        except ImportError:
+            logger.warning("OPENROUTER_API_KEY is set but openai package is not installed; falling back to anthropic")
+            return anthropic.LLM(model="claude-haiku-4-5-20251001", temperature=0.8)
+
+        client = _openai_mod.AsyncOpenAI(
+            api_key=_OR_KEY,
+            base_url=_OR_BASE_URL,
+            default_headers={
+                "HTTP-Referer": "https://github.com/kev/auscult",
+                "X-Title": "Auscult Clinical Simulator",
+            },
+        )
+        logger.info("voice-agent using OpenRouter LLM: model=%s", _OR_VOICE_MODEL)
+        return openai.LLM(model=_OR_VOICE_MODEL, client=client)
+
+    logger.info("voice-agent using Anthropic LLM (no OPENROUTER_API_KEY set)")
+    return anthropic.LLM(model="claude-haiku-4-5-20251001", temperature=0.8)
+
+
+# ───────── Voice pool (Cartesia — keep as-is; free credit available) ─────────
 # Cartesia Sonic-2 voice IDs — verified via /voices API (gender attr).
 # 2 male + 2 female English voices, picked deterministically per case.
 VOICE_IDS = {
@@ -99,7 +134,7 @@ async def entrypoint(ctx: agents.JobContext):
 
     session = AgentSession(
         stt=deepgram.STT(model="nova-3", language="en"),
-        llm=anthropic.LLM(model="claude-haiku-4-5-20251001", temperature=0.8),
+        llm=_build_voice_llm(),
         tts=cartesia.TTS(model="sonic-2", voice=voice_id),
         vad=silero.VAD.load(),
     )

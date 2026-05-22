@@ -41,11 +41,60 @@ export interface EndConfirmChecks {
 
 export type Severity = 'critical' | 'urgent' | 'stable';
 
-export interface AnamnesisQA {
+export type HealthLiteracyLevel = 'very-low' | 'low' | 'medium' | 'high';
+export type PersonalityArchetype = 'stoic' | 'anxious' | 'verbose' | 'guarded' | 'angry' | 'compliant' | 'confused';
+
+export interface PatientIdentity {
+  name: string;
+  age: number;
+  gender: 'M' | 'F';
+  occupation: string;
+  livingSituation: string;
+  primaryLanguage: string;
+  healthLiteracy: HealthLiteracyLevel;
+  personality: PersonalityArchetype;
+  personalTheory: string;
+}
+
+export interface ClinicalState {
+  primaryDiagnosis: string;
+  severity: Severity;
+  timeline: string;
+  baselineVitals: {
+    hr: number;
+    bp: string;
+    spo2: number;
+    temp: number;
+    rr: number;
+  };
+  medications: string[];
+  allergies: string[];
+}
+
+export interface HistoryItem {
   id: string;
   question: string;
   answer: string;
-  relevant: boolean;
+  relevant?: boolean;
+}
+
+export interface HistoryLayers {
+  surface: HistoryItem[];
+  middle: HistoryItem[];
+  deep: HistoryItem[];
+}
+
+export interface PhysicalExamFindings {
+  generalAppearance: string;
+  abnormalFindings: string[];
+}
+
+export interface EducationalMetadata {
+  difficulty: 1 | 2 | 3 | 4 | 5;
+  targetTrainingLevel: string;
+  learningObjectives: string[];
+  commonErrors: string[];
+  facultyNotes: string;
 }
 
 export interface TestResult {
@@ -56,25 +105,28 @@ export interface TestResult {
 
 export interface PatientCase {
   id: string;
-  name: string;
-  age: number;
-  gender: 'M' | 'F';
-  severity: Severity;
   arrivalBlurb: string;
   chiefComplaint: string;
-  vitals: {
-    hr: number;
-    bp: string;
-    spo2: number;
-    temp: number;
-    rr: number;
-  };
-  anamnesis: AnamnesisQA[];
+  
+  // Layer 1
+  identity: PatientIdentity;
+  // Layer 2
+  clinicalState: ClinicalState;
+  // Layer 3
+  history: HistoryLayers;
+  // Layer 4
+  physicalExam: PhysicalExamFindings;
+  
+  // Layers 5-7
   testResults: TestResult[];
   correctDiagnosisId: string;
+  diagnosisOptions: string[];
   acceptableTreatmentIds: string[];
   criticalTreatmentIds: string[];
-  diagnosisOptions: string[];
+  
+  // Layer 8
+  education: EducationalMetadata;
+  
   rubric?: CaseRubric;
 }
 

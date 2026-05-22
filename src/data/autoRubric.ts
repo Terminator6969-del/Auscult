@@ -47,8 +47,14 @@ const GENERIC_INTERPERSONAL: RubricCriterion[] = [
 ];
 
 export function deriveAutoRubric(c: PatientCase): CaseRubric {
-  const data_gathering: RubricCriterion[] = c.anamnesis
-    .filter((q) => q.relevant)
+  const allHistoryItems = [
+    ...(c.history?.surface ?? []),
+    ...(c.history?.middle ?? []),
+    ...(c.history?.deep ?? []),
+  ];
+
+  const data_gathering: RubricCriterion[] = allHistoryItems
+    .filter((q) => q.relevant !== false)
     .slice(0, 8)
     .map((q, i) => ({
       criterion_id: `dg-${String(i + 1).padStart(2, '0')}`,

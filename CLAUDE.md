@@ -1,5 +1,7 @@
 # medkit — Claude Code project notes
 
+> **New conversations: read `INDEX.md` first** — it has the full project structure, 9-layer data model, 3 pilot cases, guideline registry, model routing, and key rules.
+
 Browser-based ER + polyclinic clinical training simulator. Doctor-POV game: new patients arrive at triage, you diagnose, order tests, treat, disposition. Voice conversations with the patient run real-time over LiveKit: Deepgram Nova-3 (STT) + Claude Haiku 4.5 (dialog) + Cartesia Sonic-2 (TTS). Polyclinic is a second flow — one outpatient at a time, tests resolve instantly.
 
 ## Tech stack

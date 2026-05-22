@@ -2,7 +2,7 @@ import type { FaceAccessory, FaceMood } from '../components/primitives';
 import type { PatientCase } from '../game/types';
 import type { ClinicId } from '../game/clinic';
 import { CLINIC_LABELS } from '../game/clinic';
-import { POLYCLINIC_CASES, POLYCLINIC_DIAGNOSIS_LABELS } from './polyclinicPatients';
+import { PATIENT_CASES_RECORD } from './patients';
 
 /** Cute-cartoon face descriptor for the case library. Derived deterministically
  *  from the underlying `PatientCase` so the same patient always renders the
@@ -66,13 +66,13 @@ function pickSkin(p: PatientCase): string {
 
 function pickHair(p: PatientCase): string {
   // Older patients lean grey/silver.
-  if (p.age >= 65) return HAIR_TONES[6 + (hash(p.id) % 2)];
+  if (p.identity.age >= 65) return HAIR_TONES[6 + (hash(p.id) % 2)];
   return HAIR_TONES[hash(p.id + 'hair') % 6];
 }
 
 function pickMood(p: PatientCase): FaceMood {
-  if (p.severity === 'critical') return 'sad';
-  if (p.severity === 'urgent') return 'sick';
+  if (p.clinicalState.severity === 'critical') return 'sad';
+  if (p.clinicalState.severity === 'urgent') return 'sick';
   // Mild anxiety hint based on chief complaint keywords.
   const cc = p.chiefComplaint.toLowerCase();
   if (/(pain|chest|headache|bleed)/.test(cc)) return 'worried';
@@ -81,13 +81,13 @@ function pickMood(p: PatientCase): FaceMood {
 }
 
 function diagLabel(id: string): string {
-  return POLYCLINIC_DIAGNOSIS_LABELS[id] ?? id.replace(/-/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
+  return id.replace(/-/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
 }
 
 function tagsFor(p: PatientCase, clinic: ClinicId): string[] {
   const out: string[] = [];
-  if (p.severity === 'critical') out.push('red flag');
-  else if (p.severity === 'urgent') out.push('urgent');
+  if (p.clinicalState.severity === 'critical') out.push('red flag');
+  else if (p.clinicalState.severity === 'urgent') out.push('urgent');
   out.push(CLINIC_LABELS[clinic].toLowerCase());
   return out;
 }
@@ -95,9 +95,9 @@ function tagsFor(p: PatientCase, clinic: ClinicId): string[] {
 function toCase(p: PatientCase, clinic: ClinicId): Case {
   return {
     id: p.id,
-    name: p.name,
-    age: p.age,
-    sex: p.gender,
+    name: p.identity.name,
+    age: p.identity.age,
+    sex: p.identity.gender,
     complaint: p.chiefComplaint,
     tags: tagsFor(p, clinic),
     guideline: 'Polyclinic',
@@ -114,7 +114,7 @@ function toCase(p: PatientCase, clinic: ClinicId): Case {
 const BY_ID = new Map<string, { p: PatientCase; clinic: ClinicId }>();
 const ALL_CASES_RAW: Case[] = [];
 
-for (const [clinic, list] of Object.entries(POLYCLINIC_CASES) as Array<[ClinicId, PatientCase[]]>) {
+for (const [clinic, list] of Object.entries(PATIENT_CASES_RECORD) as Array<[ClinicId, PatientCase[]]>) {
   if (clinic === 'all-specialties') continue; // skip the synthetic mixed bucket
   for (const p of list) {
     if (BY_ID.has(p.id)) continue;

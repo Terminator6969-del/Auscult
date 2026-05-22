@@ -137,10 +137,12 @@ def health():
             "livekit_configured": livekit_ok,
             "deepgram_configured": bool(os.environ.get("DEEPGRAM_API_KEY")),
             "cartesia_configured": bool(os.environ.get("CARTESIA_API_KEY")),
+            "openrouter_configured": bool(os.environ.get("OPENROUTER_API_KEY")),
         },
         "agent": {
             "anthropic_sdk_installed": _HAS_ANTHROPIC,
             "api_key_configured": has_key,
+            "openrouter_patient_configured": bool(os.environ.get("OPENROUTER_API_KEY")),
             "bootstrapped": bootstrapped,
             "agent_id": agent_id,
             "environment_id": env_id,
@@ -1309,15 +1311,32 @@ def triage_classify(req: TriageClassifyRequest):
 
 
 # ───────────────────────────────────────────────────────────────────────────
-# Patient persona streaming — Haiku 4.5
+# Patient persona streaming — OpenRouter (free) or Anthropic (paid)
 # ───────────────────────────────────────────────────────────────────────────
 #
 # The browser used to call Anthropic directly with a VITE_ANTHROPIC_API_KEY
 # (dangerouslyAllowBrowser). That shipped the key in every bundle. We now
 # route patient-persona streaming through the backend so the key stays
 # server-side. SSE frames carry `{"text": "..."}` deltas, terminated with
-# `{"done": true}`. The Haiku response is short (max 256 tokens) so we
-# skip the keepalive logic the long-lived agent stream needs.
+# `{"done": true}`.
+#
+# When OPENROUTER_API_KEY is set in the environment, this endpoint uses
+# OpenRouter's OpenAI-compatible API with a free model. When unset, it
+# falls back to Anthropic's Claude Haiku 4.5.
+
+import httpx as _httpx
+
+_OR_PATIENT_KEY = os.environ.get("OPENROUTER_API_KEY", "")
+_OR_PATIENT_MODEL = os.environ.get(
+    "OPENROUTER_PATIENT_MODEL",
+    "meta-llama/llama-3.1-8b-instruct",
+)
+_OR_PATIENT_BASE = "https://openrouter.ai/api/v1"
+
+
+def _patient_uses_openrouter() -> bool:
+    return bool(_OR_PATIENT_KEY)
+
 
 PATIENT_MODEL = "claude-haiku-4-5"
 PATIENT_MAX_TOKENS = 256
@@ -1335,6 +1354,72 @@ class PatientStreamRequest(BaseModel):
 
 @app.post("/agent/patient/stream")
 async def patient_stream(req: PatientStreamRequest):
+    if _patient_uses_openrouter():
+        return await _patient_stream_openrouter(req)
+    return await _patient_stream_anthropic(req)
+
+
+async def _patient_stream_openrouter(req: PatientStreamRequest):
+    """OpenRouter-powered patient persona streaming (free tier)."""
+
+    async def generator():
+        try:
+            async with _httpx.AsyncClient(timeout=30.0) as http:
+                payload = {
+                    "model": _OR_PATIENT_MODEL,
+                    "messages": [
+                        {"role": "system", "content": req.system},
+                        *[{"role": m.role, "content": m.content} for m in req.messages],
+                    ],
+                    "max_tokens": PATIENT_MAX_TOKENS,
+                    "stream": True,
+                    "temperature": 0.8,
+                }
+                async with http.stream(
+                    "POST",
+                    f"{_OR_PATIENT_BASE}/chat/completions",
+                    json=payload,
+                    headers={
+                        "Authorization": f"Bearer {_OR_PATIENT_KEY}",
+                        "HTTP-Referer": "https://github.com/kev/auscult",
+                        "X-Title": "Auscult Clinical Simulator",
+                    },
+                ) as resp:
+                    async for line in resp.aiter_lines():
+                        if not line.startswith("data: "):
+                            continue
+                        chunk = line[6:]  # strip "data: "
+                        if chunk == "[DONE]":
+                            break
+                        try:
+                            parsed = json.loads(chunk)
+                            choice = parsed.get("choices", [{}])[0]
+                            delta = choice.get("delta", {})
+                            text = delta.get("content", "")
+                            if text:
+                                yield "data: " + json.dumps({"text": text}) + "\n\n"
+                        except json.JSONDecodeError:
+                            continue
+            yield "data: " + json.dumps({"done": True}) + "\n\n"
+        except asyncio.CancelledError:
+            raise
+        except Exception as e:
+            _agent_log.exception("OpenRouter patient stream failed")
+            yield "data: " + json.dumps({"error": str(e)}) + "\n\n"
+
+    return StreamingResponse(
+        generator(),
+        media_type="text/event-stream",
+        headers={
+            "Cache-Control": "no-cache, no-transform",
+            "Connection": "keep-alive",
+            "X-Accel-Buffering": "no",
+        },
+    )
+
+
+async def _patient_stream_anthropic(req: PatientStreamRequest):
+    """Anthropic-powered patient persona streaming (paid — Claude Haiku 4.5)."""
     client = get_async_anthropic_client()
 
     async def generator():

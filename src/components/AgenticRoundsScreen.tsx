@@ -3,7 +3,7 @@ import { TopBar } from './primitives';
 import { store } from '../game/store';
 import { GUIDELINES } from '../data/guidelines';
 import { POLYCLINIC_CASES } from '../data/polyclinicPatients';
-import { PATIENT_CASES } from '../data/patients';
+import { PATIENT_CASES_RECORD } from '../data/patients';
 
 // ── Visual canvas ───────────────────────────────────────────────────
 //
@@ -78,14 +78,19 @@ function collectAllCases() {
       if (c.rubric) withRubric += 1;
     }
   }
-  for (const c of PATIENT_CASES) {
-    if (c.rubric) withRubric += 1;
+  const erCases: PatientCase[] = [];
+  for (const cases of Object.values(PATIENT_CASES_RECORD)) {
+    if (!cases) continue;
+    for (const c of cases) {
+      erCases.push(c);
+      if (c.rubric) withRubric += 1;
+    }
   }
   return {
-    total: polyTotal + PATIENT_CASES.length,
+    total: polyTotal + erCases.length,
     withRubric,
     polyTotal,
-    erTotal: PATIENT_CASES.length,
+    erTotal: erCases.length,
   };
 }
 
