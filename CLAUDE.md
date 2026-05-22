@@ -17,7 +17,9 @@ Browser-based ER + polyclinic clinical training simulator. Doctor-POV game: new 
 
 - `src/game/store.ts` — single source of truth for all game state (ER beds, polyclinic, notifications, archive).
 - `src/game/types.ts` — `PatientCase`, `ActivePatient`, `GameState`.
-- `src/data/patients.ts` / `polyclinicPatients.ts` / `tests.ts` / `treatments.ts` / `medications.ts` — pure data files.
+- `cases/` — ★ **CANONICAL SOURCE** for adding new cases. See `cases/{specialty}/{case-id}.json`. JSON files load via `import.meta.glob` in `src/data/cases.ts`. Do NOT edit `src/data/patients.ts` to add new cases.
+- `src/data/patients.ts` / `polyclinicPatients.ts` — legacy data files. New cases go in `cases/`. These still exist for backwards compatibility; JSON files in `cases/` take precedence.
+- `src/data/tests.ts` / `treatments.ts` / `medications.ts` — pure data files.
 - `src/components/three/Polyclinic.tsx` — polyclinic 3D scene, currently active area of work.
 - `src/voice/conversation.ts` — `Conversation` class, LiveKit-backed real-time session (mic, remote audio, transcription events, lip-sync analyser tap).
 - `src/voice/conversationStore.ts` — per-bed conversation cache; T-toggle and patient-leaves dispose explicitly.

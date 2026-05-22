@@ -22,6 +22,14 @@ Browser-based clinical training simulator. Student plays doctor:
 
 ```
 Auscult/
+├── cases/                        ★ CANONICAL CASE STORAGE (JSON)
+│   ├── cardiology/
+│   │   └── card-stemi-001.json   Pieter van der Merwe — STEMI
+│   ├── endocrinology/
+│   │   └── endo-dka-001.json     Thandiwe Mokoena — DKA
+│   └── infectious-disease/
+│       └── id-tb-hiv-001.json    Sipho Ndlovu — TB/HIV
+│
 ├── src/                          ★ FRONTEND (React + Vite + TypeScript)
 │   ├── main.tsx                  App entry
 │   │
@@ -32,7 +40,9 @@ Auscult/
 │   │   └── ...
 │   │
 │   ├── data/                     ★ CASE DATA & REGISTRIES
-│   │   ├── patients.ts           3 SA pilot cases (Sipho/Thandiwe/Pieter)
+│   │   ├── cases.ts              Case loader — reads `cases/` JSON + legacy
+│   │   ├── patients.ts           Legacy: 3 SA pilot cases (Sipho/Thandiwe/Pieter)
+│   │   ├── polyclinicPatients.ts Legacy: ~350 cases across 25 specialties
 │   │   ├── treatments.ts         All orderable treatments (27 items)
 │   │   ├── tests.ts              All orderable tests (80+ items)
 │   │   ├── guidelines.ts         Guideline registry (6 entries)
